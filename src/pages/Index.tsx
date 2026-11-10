@@ -9,6 +9,9 @@ import InteractiveInfographicSection from "@/components/InteractiveInfographicSe
 import TrustFeaturesGrid from "@/components/TrustFeaturesGrid";
 import TechnicalSpecsSection from "@/components/TechnicalSpecsSection";
 import AirflowBasketSection from "@/components/AirflowBasketSection";
+
+// PTZ module close-up block: not needed for the 3-head camera for now
+const SHOW_PTZ_MODULE = false;
 import LiquidFocusCarousel from "@/components/LiquidFocusCarousel";
 import VideoSection from "@/components/VideoSection";
 import DeliveryTrustSection from "@/components/DeliveryTrustSection";
@@ -110,10 +113,12 @@ const Index = () => {
           {/* Same scene from day to night (IR) while scrolling */}
           <DayNightShowcase />
 
-          {/* Camera rotation / 3 lenses infographic */}
-          <ScanReveal>
-            <AirflowBasketSection />
-          </ScanReveal>
+          {/* "Modulul PTZ cu zoom hibrid" close-up — hidden on this site (kept in code; set SHOW_PTZ_MODULE = true to show) */}
+          {SHOW_PTZ_MODULE && (
+            <ScanReveal>
+              <AirflowBasketSection />
+            </ScanReveal>
+          )}
 
           {/* Scroll-driven 360° turntable */}
           <Rotate360Showcase />
