@@ -40,8 +40,8 @@ interface Card {
 }
 
 const CARDS: Card[] = [
-  { eb: "3 capete", big: "3", h: "Trei camere într‑un aparat", p: "Trei capete cu obiectiv — trei imagini simultan în aplicație.", end: { s: 1, f: [50, 52] }, rings: ["left", "center", "right"] },
-  { eb: "3 proiectoare LED", big: "24/7", h: "Imagine clară și noaptea", p: "Trei proiectoare LED luminează curtea, iar infraroșul vede și în beznă totală.", end: { s: 1.55, f: [50, 26] }, flood: true },
+  { eb: "3 capete", big: "3", h: "Trei camere într‑un aparat", p: "Trei capete cu obiectiv — trei imagini simultan în aplicație.", end: { s: 0.86, f: [50, 52] }, rings: ["left", "center", "right"] },
+  { eb: "3 proiectoare LED", big: "24/7", h: "Imagine clară și noaptea", p: "Trei proiectoare LED luminează curtea, iar infraroșul vede și în beznă totală.", end: { s: 1.05, f: [50, 34] }, flood: true },
   { eb: "Rotire PTZ", h: "O rotiți cu un deget", p: "Stânga-dreapta și sus-jos, din aplicația V380 Pro.", end: { s: 1.5, f: [50, 70] }, ptz: true },
 ];
 
