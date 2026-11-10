@@ -192,8 +192,9 @@ const SpecCard = ({ c }: { c: Card }) => {
 
 // Auto-tracking: a person walks along the road, the rotating head (only the head — the top lens is fixed)
 // turns after them in 3D, its view cone stays on them, the pan angle is read out live.
-const CAM_TOP = "/effects/library/camera-front-top.webp";
-const CAM_HEAD = "/effects/library/camera-front-head.webp";
+// 3-head camera: only the centre head tracks; the side heads keep watching left and right.
+const CAM_BODY = "/products/cam3-track-body.webp"; // whole camera without the centre head
+const CAM_HEAD = "/products/cam3-track-head.webp"; // centre PTZ head
 
 const TrackCard = () => {
   const ref = useRef<HTMLElement>(null);
@@ -218,8 +219,8 @@ const TrackCard = () => {
     return () => io.disconnect();
   }, []);
 
-  // scene units 500 × 400. Lens origin (250, 166); the person walks along the road at y 330 (feet).
-  const OX = 250, OY = 166, FY = 352, AMP = 190;
+  // scene units 500 × 400. Centre lens (250, 163); the person walks along the road at y 330 (feet).
+  const OX = 250, OY = 163, FY = 352, AMP = 190;
   useEffect(() => {
     const draw = (t: number) => {
       const ph = (t / 9) * Math.PI * 2;
@@ -275,13 +276,18 @@ const TrackCard = () => {
           <path d="M-20 272 L520 272 L520 380 L-20 380 Z" fill="url(#lxs-tr-road)" />
           <path d="M-20 272 L520 272 M-20 380 L520 380" stroke="rgba(255,255,255,0.22)" strokeWidth="2" />
           <path className="lxs-tr-dash" d="M-20 326 L520 326" stroke="rgba(251,191,36,0.6)" strokeWidth="3" strokeDasharray="16 14" />
-          {/* view cone from the rotating head + footprint on the road */}
+          {/* fixed view zones of the two side heads (they do not track) */}
+          <path className="lxs-tr-side" d="M168 131 L-20 262 Q 18 336 96 344 L177 133 Z" />
+          <path className="lxs-tr-side" d="M332 131 L520 262 Q 482 336 404 344 L323 133 Z" />
+          <text className="lxs-tr-zone" x="34" y="250">Stânga</text>
+          <text className="lxs-tr-zone" x="466" y="250" textAnchor="end">Dreapta</text>
+          {/* view cone from the rotating centre head + footprint on the road */}
           <path ref={coneRef} className="lxs-tr-cone" d="" />
           <ellipse ref={spotRef} className="lxs-tr-spot" cx={OX} cy={FY + 4} rx="40" ry="10" />
         </svg>
 
         <div className="lxs-tr-cam">
-          <img className="top" src={CAM_TOP} alt="" decoding="async" draggable={false} />
+          <img className="body" src={CAM_BODY} alt="" decoding="async" draggable={false} />
           <img ref={headRef} className="head" src={CAM_HEAD} alt="" decoding="async" draggable={false} />
           <div
             ref={shadeRef}
@@ -303,7 +309,7 @@ const TrackCard = () => {
       <div className="lxs-txt">
         <div className="lxs-eyebrow">Urmărire automată</div>
         <h3>Camera îl urmărește singură</h3>
-        <p>Când apare o persoană, capul rotativ se întoarce după ea și o ține în cadru. Obiectivul fix de sus vede în continuare toată zona.</p>
+        <p>Când apare o persoană, capul din mijloc se întoarce după ea și o ține în cadru. Capetele laterale supraveghează în continuare stânga și dreapta.</p>
       </div>
     </article>
   );

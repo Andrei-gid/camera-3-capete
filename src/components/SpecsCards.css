@@ -334,15 +334,18 @@
 .lxs-tr-spot { fill: rgba(103, 232, 249, 0.22); stroke: rgba(103, 232, 249, 0.75); stroke-width: 1.5; opacity: 0; transition: opacity 0.5s ease 0.7s;
   filter: drop-shadow(0 0 8px rgba(103, 232, 249, 0.8)); }
 .lxs-tr.is-in .lxs-tr-cone, .lxs-tr.is-in .lxs-tr-spot { opacity: 1; }
+.lxs-tr-side { fill: rgba(167, 139, 250, 0.13); stroke: rgba(167, 139, 250, 0.35); stroke-width: 1; stroke-dasharray: 4 5; opacity: 0; transition: opacity 0.5s ease 0.4s; }
+.lxs-tr-zone { fill: rgba(196, 181, 253, 0.85); font-size: 13px; font-weight: 600; letter-spacing: 0.04em; opacity: 0; transition: opacity 0.5s ease 0.6s; }
+.lxs-tr.is-in .lxs-tr-side, .lxs-tr.is-in .lxs-tr-zone { opacity: 1; }
 /* camera: fixed top + head that turns in 3D (scene: x 192–308, y 8–208) */
-.lxs-tr-cam { position: absolute; left: 50%; top: 2%; height: 50%; aspect-ratio: 625 / 1087; transform: translateX(-50%); perspective: 520px;
+.lxs-tr-cam { position: absolute; left: 50%; top: 3%; width: 46%; aspect-ratio: 1400 / 1098; transform: translateX(-50%); perspective: 520px;
   filter: drop-shadow(0 20px 26px rgba(0, 0, 0, 0.6)); opacity: 0; transition: opacity 0.5s ease; }
 .lxs-tr.is-in .lxs-tr-cam { opacity: 1; }
-.lxs-tr-cam img { position: absolute; left: 0; width: 100%; max-width: none; display: block; }
-.lxs-tr-cam .top { top: 0; height: 53.5%; z-index: 2; }
-.lxs-tr-cam .head { top: 53.4%; height: 46.6%; z-index: 1; transform-origin: 50% 50%; will-change: transform; backface-visibility: hidden; }
+.lxs-tr-cam img { position: absolute; max-width: none; display: block; }
+.lxs-tr-cam .body { left: 0; top: 0; width: 100%; height: 100%; z-index: 2; }
+.lxs-tr-cam .head { left: 32.14%; top: 61.11%; width: 34.64%; height: 38.89%; z-index: 1; transform-origin: 50% 50%; will-change: transform; backface-visibility: hidden; }
 /* shading of the far side of the turning head, masked to the head's own shape */
-.lxs-tr-cam .shade { position: absolute; left: 0; top: 53.4%; width: 100%; height: 46.6%; z-index: 1; opacity: 0; pointer-events: none; transform-origin: 50% 50%; }
+.lxs-tr-cam .shade { position: absolute; left: 32.14%; top: 61.11%; width: 34.64%; height: 38.89%; z-index: 1; opacity: 0; pointer-events: none; transform-origin: 50% 50%; }
 /* the person on the road */
 .lxs-tr-man { position: absolute; bottom: 11%; height: 27%; aspect-ratio: 412 / 900; transform: translateX(-50%); opacity: 0; transition: opacity 0.4s ease 0.3s; }
 .lxs-tr.is-in .lxs-tr-man { opacity: 1; }
@@ -366,7 +369,7 @@
 .lxs-tr.is-in .lxs-tr-read { opacity: 1; }
 @media (min-width: 640px) { .lxs-tr-read { font-size: 13.5px; } .lxs-tr-box b { font-size: 12px; } }
 @media (prefers-reduced-motion: reduce) {
-  .lxs-tr-cone, .lxs-tr-spot, .lxs-tr-cam, .lxs-tr-man, .lxs-tr-box, .lxs-tr-read { transition: none !important; }
+  .lxs-tr-side, .lxs-tr-zone, .lxs-tr-cone, .lxs-tr-spot, .lxs-tr-cam, .lxs-tr-man, .lxs-tr-box, .lxs-tr-read { transition: none !important; }
   .lxs-tr-read i { animation: none; }
 }
 
