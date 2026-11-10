@@ -281,7 +281,8 @@ export const DEFAULT_CONTENT: SiteContent = {
       },
     ],
   },
-  gallery: [IMG.main, IMG.alt, IMG.photo1, IMG.photo2, IMG.photo3],
+  // 3-head camera with floodlights (the version sold on this site)
+  gallery: ["/products/cam3-front.webp", "/products/cam3-house.webp", "/products/cam3-rotation.webp", "/products/cam3-white.webp"],
   specs: [
     {
       icon: "Camera",
