@@ -75,7 +75,7 @@
   transition: border-color 0.3s ease, box-shadow 0.3s ease; --pan: 50%; }
 .th3-win.on { border-color: rgba(103, 232, 249, 0.9); box-shadow: 0 0 16px rgba(103, 232, 249, 0.45); }
 /* live view: wide yard panorama that pans when the head turns */
-.th3-scene { position: absolute; inset: 0; background: #0f172a url(/effects/hz-panorama.webp) no-repeat; background-size: auto 150%; background-position: var(--pan) 60%; }
+.th3-scene { position: absolute; inset: 0; background: #0f172a url(/effects/hz-panorama.webp) no-repeat; background-size: 260% auto; background-position: var(--pan) 62%; }
 .th3-win-l { position: absolute; left: 6px; top: 5px; font-size: 9.5px; font-weight: 700; color: #fff; padding: 1px 6px; border-radius: 6px; background: rgba(2, 6, 23, 0.6); }
 .th3-rec { position: absolute; right: 7px; top: 8px; width: 6px; height: 6px; border-radius: 50%; background: #f43f5e; box-shadow: 0 0 6px #f43f5e; }
 .th3-joy { position: absolute; right: 7px; bottom: 6px; width: 30px; height: 30px; border-radius: 50%; background: rgba(2, 6, 23, 0.55); border: 1px solid rgba(255, 255, 255, 0.25); }
