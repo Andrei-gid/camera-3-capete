@@ -1,3 +1,4 @@
+import ThreeHeadsShowcase from "@/components/ThreeHeads";
 import FloatingGlassSidebar from "@/components/FloatingGlassSidebar";
 import LandingHeroConfigurator from "@/components/LandingHeroConfigurator";
 import HeroSubNav from "@/components/HeroSubNav";
@@ -64,9 +65,9 @@ const Index = () => {
             </SafeSection>
           </div>
 
-          {/* Dual View comparison: ordinary 2-lens camera vs ours (3 images + 10x zoom) */}
+          {/* 3 motorised heads vs ordinary camera (only its lower head turns), driven from the phone — CSS 3D */}
           <SafeSection>
-            <DualViewCompare />
+            <ThreeHeadsShowcase />
           </SafeSection>
 
           {/* Liquid Focus Carousel — mobile only, immediately after specs */}
