@@ -53,7 +53,6 @@ const ThreeHeadsShowcase = () => {
   const rigs = useRef<(HTMLDivElement | null)[]>([]);
   const wins = useRef<(HTMLDivElement | null)[]>([]);
   const sticks = useRef<(HTMLSpanElement | null)[]>([]);
-  const finger = useRef<HTMLSpanElement>(null);
   const phaseRef = useRef(-1);
 
   useEffect(() => {
@@ -102,11 +101,6 @@ const ThreeHeadsShowcase = () => {
       let p = -1;
       PHASES.forEach(([a, b], i) => { if (t >= a && t < b) p = i; });
       if (p !== phaseRef.current) { phaseRef.current = p; setPhase(p); }
-      if (finger.current) {
-        const target = p < 0 ? 1 : p === 3 ? 3 : p;
-        finger.current.style.setProperty("--row", String(target));
-        finger.current.style.opacity = p < 0 ? "0" : "1";
-      }
     };
     if (prefersReduced()) { draw(10.2); return; }
     if (!shown || !onScreen) { draw(0); return; }
@@ -175,7 +169,6 @@ const ThreeHeadsShowcase = () => {
                 </div>
               ))}
               <div className={"th3-all" + (phase === 3 ? " on" : "")}>Toate 3 — din telefon</div>
-              <span className="th3-finger" ref={finger} aria-hidden="true" />
             </div>
           </div>
         </div>
