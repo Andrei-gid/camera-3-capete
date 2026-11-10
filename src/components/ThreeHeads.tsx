@@ -93,7 +93,7 @@ const ThreeHeadsShowcase = () => {
       // phone: the matching window pans, its joystick knob moves
       vals.forEach((v, i) => {
         const w = wins.current[i];
-        if (w) w.style.setProperty("--pan", `${(50 - v * 38).toFixed(1)}%`);
+        if (w) w.style.setProperty("--pan", `${([12, 50, 88][i] - v * 12).toFixed(1)}%`);
         const s = sticks.current[i];
         if (s) s.style.transform = `translate(calc(-50% + ${(v * 9).toFixed(1)}px), -50%)`;
       });
