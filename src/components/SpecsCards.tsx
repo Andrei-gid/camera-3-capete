@@ -475,7 +475,6 @@ const NotifyCard = () => {
 };
 
 // Two ways to connect: WiFi from the router's antennas to the camera's, and a LAN cable into the camera's RJ45.
-const CAM_FRONT = "/effects/library/camera-front.webp";
 const LAN_PLUG = "/effects/library/camera-lan-connector.webp";
 
 const LanCard = () => {
@@ -493,9 +492,9 @@ const LanCard = () => {
     return () => io.disconnect();
   }, []);
 
-  // scene units: 500 × 400 (the view is 5 : 4). Camera box: x 290–465, y 24–328.
-  const cable = "M200 300 C 250 300, 250 372, 300 372 L 345 372 C 370 372, 377 360, 377 332";
-  const wifi = "M128 160 C 170 70, 240 40, 292 34";
+  // scene units: 500 × 400 (the view is 5 : 4). 3-head camera box: x 268–488, y 90–262.
+  const cable = "M200 300 C 250 300, 250 352, 300 352 L 345 352 C 372 352, 378 300, 378 258";
+  const wifi = "M128 160 C 170 96, 236 82, 286 90";
   return (
     <article ref={ref} className={"lxs-block lxs-lan" + (shown ? " is-in" : "")}>
       <div className="lxs-view lxs-lan-view">
@@ -522,8 +521,8 @@ const LanCard = () => {
           </g>
           <path className="lxs-lan-air" d={wifi} />
           <g className="lxs-lan-rx">
-            <path d="M284 22 A 14 14 0 0 1 302 14" />
-            <path d="M278 14 A 24 24 0 0 1 308 2" />
+            <path d="M284 80 A 14 14 0 0 1 302 72" />
+            <path d="M278 72 A 24 24 0 0 1 308 60" />
           </g>
 
           {/* LAN cable: router → floor → camera */}
@@ -545,7 +544,7 @@ const LanCard = () => {
           </g>
         </svg>
 
-        <img className="lxs-lan-cam" src={CAM_FRONT} alt="" decoding="async" draggable={false} />
+        <img className="lxs-lan-cam" src={CUT} alt="" decoding="async" draggable={false} />
 
         <span className="lxs-lan-chip c1"><i>1</i>WiFi</span>
         <span className="lxs-lan-chip c2"><i>2</i>Cablu LAN</span>
@@ -594,7 +593,7 @@ const AudioCard = () => {
 
   // scene units 500 × 400. Phone tip ≈ (190, 222); camera x 300–447, rotating head centre ≈ y 216
   const X0 = 196, X1 = 300, CY = 220, N = 44;
-  const BAR_X = 455, BAR_H = [12, 20, 30, 42, 56];
+  const BAR_X = 366, BAR_H = [12, 20, 30, 42, 56];
   // speech-like loudness: syllables (fast) inside phrases (slow), with short pauses
   const speech = (t: number) => {
     const phrase = Math.max(0, Math.sin(t * 0.9) * 0.6 + 0.55);
@@ -626,7 +625,7 @@ const AudioCard = () => {
       barRefs.current.forEach((el, i) => {
         if (!el) return;
         const h = BAR_H[i] * (0.3 + 0.7 * speech(t - 0.4 - i * 0.06));
-        el.setAttribute("y", (216 - h / 2).toFixed(1));
+        el.setAttribute("y", (300 - h / 2).toFixed(1));
         el.setAttribute("height", h.toFixed(1));
       });
     };
@@ -645,7 +644,7 @@ const AudioCard = () => {
       <div className="lxs-view lxs-au-view">
         <div className="lxs-halo" aria-hidden="true" />
         <img className="lxs-au-person" src={PERSON} alt="" decoding="async" draggable={false} />
-        <img className="lxs-au-cam" src={CAM_FRONT} alt="" decoding="async" draggable={false} />
+        <img className="lxs-au-cam" src={CUT} alt="" decoding="async" draggable={false} />
         <svg className="lxs-au-svg" viewBox="0 0 500 400" aria-hidden="true">
           <defs>
             <linearGradient id="lxs-au-wave" gradientUnits="userSpaceOnUse" x1={X0} y1="0" x2={X1} y2="0">
@@ -666,7 +665,7 @@ const AudioCard = () => {
           </g>
           <g className="lxs-au-bars">
             {BAR_H.map((h, i) => (
-              <rect key={i} ref={(el) => { barRefs.current[i] = el; }} x={BAR_X + i * 8} y={216 - h / 2} width="4" height={h} rx="2" />
+              <rect key={i} ref={(el) => { barRefs.current[i] = el; }} x={BAR_X + i * 8} y={300 - h / 2} width="4" height={h} rx="2" />
             ))}
           </g>
         </svg>
