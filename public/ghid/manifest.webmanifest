@@ -1,0 +1,29 @@
+{
+  "name": "Ghid de conectare V380 Pro",
+  "short_name": "Ghid V380",
+  "description": "Conectați camera pas cu pas.",
+  "start_url": "/ghid/",
+  "scope": "/ghid/",
+  "display": "standalone",
+  "background_color": "#0c0f17",
+  "theme_color": "#0c0f17",
+  "lang": "ro",
+  "icons": [
+    {
+      "src": "/ghid/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/ghid/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/ghid/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

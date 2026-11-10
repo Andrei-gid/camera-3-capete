@@ -1,0 +1,217 @@
+/* Dual View: "one top lens -> two screens".
+   1) .dvc-*  — spec card inside SpecsCards (replaces the old "Obiectiv panoramic" card)
+   2) .dvx-*  — comparison block: ordinary 2-lens camera vs our camera
+   Same look as the site: navy glass, Orbitron titles, cyan labels, amber accent. */
+
+/* ---------- shared bits ---------- */
+.dv-pano { background: #0b1020 url(/effects/hz-panorama.webp) no-repeat; }
+.dv-zoomimg { background: #0b1020 url(/effects/hz-zoom.webp) center 58% / cover no-repeat; }
+.dv-cctv { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.5) 100%); }
+.dv-scan { position: absolute; left: 0; right: 0; height: 40%; top: -40%; pointer-events: none;
+  background: linear-gradient(to bottom, transparent, rgba(103, 232, 249, 0.13), transparent); animation: dv-scan 4s linear infinite; }
+@keyframes dv-scan { 0% { top: -40%; } 100% { top: 110%; } }
+.dv-rec { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 6px #ef4444; animation: dv-blink 1.4s steps(2, start) infinite; }
+@keyframes dv-blink { to { visibility: hidden; } }
+.dv-tag { position: absolute; top: 6%; left: 4%; font-size: 9px; font-weight: 800; letter-spacing: 0.05em; padding: 2px 6px; border-radius: 5px;
+  background: rgba(5, 10, 36, 0.8); color: #a5f3fc; white-space: nowrap; line-height: 1.3; }
+.dv-tag.amber { color: #fde68a; }
+.dv-tag.grey { color: #e2e8f0; }
+/* night LED lamps on both sides of the top lens: bright double flash */
+.dv-led { position: absolute; border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%); mix-blend-mode: screen;
+  background: radial-gradient(circle, #fff 0%, #fffbe6 18%, rgba(254, 240, 138, 0.85) 34%, rgba(253, 224, 71, 0.35) 58%, transparent 72%);
+  animation: dv-led 1.6s infinite; }
+.dv-led.halo { opacity: 0.5; }
+@keyframes dv-led { 0%, 100% { opacity: 0.08; } 8% { opacity: 1; } 16% { opacity: 0.15; } 24% { opacity: 1; } 36% { opacity: 0.08; } }
+.dv-pulse { animation: dv-pulse 2.4s ease-in-out infinite; }
+@keyframes dv-pulse { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+
+/* ---------- 1) spec card ---------- */
+.dvc-view { position: relative; aspect-ratio: 390 / 360; width: 100%; }
+.dvc-cam { position: absolute; left: 15%; top: 0; width: 70%; height: auto; display: block; max-width: none;
+  -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 92%); mask-image: linear-gradient(to bottom, #000 62%, transparent 92%);
+  filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.55)); }
+.dvc-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.dvc-beam { opacity: 0; }
+.lxs-block.is-in .dvc-beam { animation: dv-beam 3.2s ease-in-out infinite; }
+.lxs-block.is-in .dvc-beam.r { animation-delay: 1.6s; }
+@keyframes dv-beam { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+.dvc-lensring { position: absolute; left: 50%; top: 42.2%; width: 12%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%;
+  border: 2px solid #67e8f9; box-shadow: 0 0 16px rgba(103, 232, 249, 0.9), inset 0 0 10px rgba(103, 232, 249, 0.5); }
+.dvc-lensring.wave { box-shadow: none; animation: dvc-ring 2.4s ease-out infinite; }
+@keyframes dvc-ring { 0% { transform: translate(-50%, -50%) scale(0.7); opacity: 0.95; } 100% { transform: translate(-50%, -50%) scale(1.9); opacity: 0; } }
+.dvc-chip { position: absolute; left: 61%; top: 27%; display: flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px;
+  background: rgba(5, 10, 36, 0.82); border: 1px solid rgba(103, 232, 249, 0.6); box-shadow: 0 0 18px rgba(56, 189, 248, 0.35);
+  font-size: 11px; font-weight: 800; letter-spacing: 0.1em; color: #a5f3fc; white-space: nowrap; }
+.dvc-chip svg { width: 13px; height: 13px; }
+.dvc-screen { position: absolute; top: 67.2%; width: 43.6%; height: 30%; border-radius: 12px; overflow: hidden;
+  box-shadow: 0 0 0 1.5px rgba(103, 232, 249, 0.75), 0 0 26px rgba(56, 189, 248, 0.35), 0 18px 40px rgba(0, 0, 0, 0.55);
+  opacity: 0; transform: translateY(12px); transition: opacity 0.5s ease, transform 0.5s ease; }
+.dvc-screen.l { left: 4.1%; background-position: 4% 72%; background-size: 215% auto; transition-delay: 0.35s; }
+.dvc-screen.r { left: 52.3%; background-position: 96% 72%; background-size: 215% auto; transition-delay: 0.55s; }
+.lxs-block.is-in .dvc-screen { opacity: 1; transform: none; }
+.dvc-live { position: absolute; bottom: 6%; left: 4%; display: flex; align-items: center; gap: 4px; font-size: 9px; font-weight: 600; color: #e2e8f0; }
+.dvc-badge { display: inline-block; margin-right: 8px; padding: 2px 7px; border-radius: 6px; vertical-align: 1px; letter-spacing: 0.06em;
+  font-family: "Orbitron", "Inter", system-ui, sans-serif; font-weight: 800; font-size: 11px; color: #0b1020; background: linear-gradient(90deg, #67e8f9, #a78bfa); }
+.dvc-pills { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 12px; }
+.dvc-pills span { font-size: 13px; font-weight: 700; padding: 7px 12px; border-radius: 999px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.14); }
+.dvc-pills span.hot { color: #0b1020; font-weight: 800; border: 0; background: linear-gradient(90deg, #fde047, #fbbf24); }
+.dvc-pills svg { width: 18px; height: 18px; color: #67e8f9; }
+
+/* ---------- 2) comparison block ---------- */
+.dvx { position: relative; width: 100%; box-sizing: border-box; padding: 28px 12px 24px; color: #f8fafc; font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif; }
+.dvx-head { text-align: center; max-width: 640px; margin: 0 auto 18px; }
+.dvx-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.22em; color: #67e8f9; }
+.dvx-head h2 { margin: 8px 0 0; font-family: "Orbitron", "Inter", system-ui, sans-serif; font-weight: 800; font-size: 24px; line-height: 1.15; text-wrap: balance;
+  text-shadow: 0 0 20px rgba(255, 180, 50, 0.3); }
+.dvx-head h2 span { color: #fbbf24; }
+.dvx-head p { margin: 8px auto 0; max-width: 46ch; font-size: 14px; line-height: 1.45; color: #cbd5e1; text-wrap: pretty; }
+
+.dvx-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; max-width: 900px; margin: 0 auto; }
+.dvx-col { position: relative; min-width: 0; box-sizing: border-box; border-radius: 20px; padding: 14px 8px 12px; display: flex; flex-direction: column; align-items: center; gap: 10px;
+  background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); }
+.dvx-col.ours { border: 0; background: linear-gradient(165deg, rgba(56, 189, 248, 0.13), rgba(99, 102, 241, 0.08) 55%, rgba(255, 255, 255, 0.03));
+  box-shadow: 0 0 0 1px rgba(103, 232, 249, 0.5), 0 0 30px rgba(56, 189, 248, 0.22), 0 20px 50px rgba(0, 0, 0, 0.45); }
+.dvx-flag { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); white-space: nowrap; font-size: 9.5px; font-weight: 800; letter-spacing: 0.1em;
+  color: #0b1020; padding: 4px 10px; border-radius: 999px; background: linear-gradient(90deg, #fde047, #fbbf24); box-shadow: 0 4px 14px rgba(251, 191, 36, 0.4); }
+.dvx-ttl { text-align: center; }
+.dvx-ttl small { display: block; font-size: 9.5px; font-weight: 700; letter-spacing: 0.16em; color: #94a3b8; }
+.dvx-col.ours .dvx-ttl small { color: #67e8f9; }
+.dvx-ttl b { display: block; margin-top: 3px; font-family: "Orbitron", "Inter", system-ui, sans-serif; font-weight: 700; font-size: 14px; color: #e2e8f0; }
+.dvx-col.ours .dvx-ttl b { color: #fff; }
+.dvx-ttl b span { color: #fbbf24; }
+
+.dvx-cam { position: relative; height: 104px; flex: none; }
+.dvx-cam img { height: 100%; width: 100%; display: block; filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.55)); }
+.dvx-cam.old img { filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.55)) saturate(0.9); }
+.dvx-ring { position: absolute; transform: translate(-50%, -50%); border-radius: 50%; border: 1.5px solid #67e8f9; box-shadow: 0 0 8px rgba(103, 232, 249, 0.9); }
+.dvx-box { position: absolute; border-radius: 6px; border: 1.5px solid #fbbf24; box-shadow: 0 0 8px rgba(251, 191, 36, 0.7); }
+
+.dvx-notes { display: flex; flex-direction: column; gap: 4px; width: 100%; padding: 0 2px; box-sizing: border-box; }
+.dvx-notes div { display: flex; align-items: flex-start; gap: 6px; font-size: 11px; line-height: 1.3; color: #cbd5e1; }
+.dvx-notes i { flex: none; width: 7px; height: 7px; margin-top: 4px; border-radius: 50%; background: #94a3b8; }
+.dvx-notes i.c { background: #67e8f9; box-shadow: 0 0 6px #67e8f9; }
+.dvx-notes i.a { background: #fbbf24; box-shadow: 0 0 6px #fbbf24; }
+.dvx-notes b { color: #fff; }
+
+.dvx-phone { position: relative; width: 100%; max-width: 230px; aspect-ratio: 148 / 286; box-sizing: border-box; border-radius: 24px; padding: 6px;
+  background: #0a0a0f; border: 1px solid rgba(255, 255, 255, 0.16); }
+.dvx-col.ours .dvx-phone { border-color: rgba(255, 255, 255, 0.22); box-shadow: 0 0 0 3px rgba(103, 232, 249, 0.08); }
+.dvx-notch { position: absolute; top: 3.2%; left: 50%; transform: translateX(-50%); width: 30%; height: 4.2%; border-radius: 999px; background: #000; z-index: 2; }
+.dvx-scr { box-sizing: border-box; height: 100%; border-radius: 19px; overflow: hidden; background: #0b1020; display: flex; flex-direction: column; gap: 4px; padding: 17% 4px 5px; }
+.dvx-win { position: relative; border-radius: 8px; overflow: hidden; flex: none; }
+/* ordinary camera: both tiles fill the phone screen and show the whole yard — small, far, same colours */
+.dvx-win.far { flex: 1 1 0; min-height: 0; background-size: cover; }
+.dvx-win.far.top { background-image: url(/effects/hz-panorama-far.webp); background-position: 50% 50%; }
+.dvx-win.far.bot { background: #0b1020; }
+/* the bottom lens looks the other way: same yard, mirrored */
+.dvx-win.far.bot::before { content: ""; position: absolute; inset: 0; transform: scaleX(-1);
+  background: url(/effects/hz-panorama-far.webp) 50% 100% / cover no-repeat; }
+.dvx-z1 { position: absolute; right: 4%; bottom: 6%; font-size: 10px; font-weight: 800; color: #e2e8f0; padding: 2px 7px; border-radius: 999px;
+  background: rgba(5, 10, 36, 0.8); border: 1px dashed rgba(148, 163, 184, 0.7); }
+.dvx-ctrl { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 0; }
+.dvx-ctrl-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; }
+.dvx-ctrl-row span { width: 22px; height: 22px; border-radius: 50%; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex; align-items: center; justify-content: center; }
+.dvx-ctrl-row svg { width: 11px; height: 11px; color: #94a3b8; }
+.dvx-ctrl em { font-style: normal; font-size: 10px; font-weight: 700; color: #94a3b8; padding: 2px 8px; border-radius: 999px; border: 1px dashed rgba(148, 163, 184, 0.5); }
+/* our camera: two zones closer + the zoom close-up */
+.dvx-zones { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3px; flex: none; }
+.dvx-win.zone { aspect-ratio: 3 / 4.3; outline: 1px solid rgba(103, 232, 249, 0.75); background-size: 215% auto; }
+.dvx-win.zone.l { background-position: 4% 72%; }
+.dvx-win.zone.r { background-position: 96% 72%; }
+.dvx-div { display: flex; align-items: center; gap: 4px; padding: 0 2px; }
+.dvx-div span { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, #67e8f9); }
+.dvx-div span:last-child { background: linear-gradient(90deg, #67e8f9, transparent); }
+.dvx-div b { font-size: 7.5px; font-weight: 800; letter-spacing: 0.1em; color: #67e8f9; white-space: nowrap; }
+.dvx-win.zoom { flex: 1; min-height: 0; outline: 1px solid rgba(251, 191, 36, 0.8); }
+.dvx-x { margin-left: 3px; font-family: "Orbitron", "Inter", system-ui, sans-serif; font-size: 9px; font-weight: 800; padding: 2px 5px; border-radius: 5px;
+  background: #fbbf24; color: #0b1020; }
+.dvx-recpos { position: absolute; bottom: 6px; left: 6px; line-height: 0; }
+
+.dvx-foot { display: flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 700; color: #94a3b8; text-align: center; }
+.dvx-foot svg { width: 12px; height: 12px; flex: none; }
+.dvx-col.ours .dvx-foot { color: #fbbf24; }
+
+.dvx-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; max-width: 900px; margin: 14px auto 0; }
+.dvx-stat { border-radius: 14px; padding: 10px 6px; text-align: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); }
+.dvx-stat b { display: block; font-size: 15px; font-weight: 800; }
+.dvx-stat b s { text-decoration: none; color: #94a3b8; font-weight: 600; }
+.dvx-stat b span { color: #fbbf24; }
+.dvx-stat small { display: block; margin-top: 3px; font-size: 10.5px; line-height: 1.25; color: #94a3b8; }
+.dvx-cta-wrap { text-align: center; margin-top: 16px; }
+.dvx-cta { display: inline-flex; align-items: center; gap: 8px; padding: 13px 26px; border-radius: 999px; text-decoration: none;
+  font-family: "Orbitron", "Inter", system-ui, sans-serif; font-weight: 800; font-size: 13px; letter-spacing: 0.08em; color: #0b1020;
+  background: linear-gradient(90deg, #fde047, #fbbf24); box-shadow: 0 10px 30px rgba(251, 191, 36, 0.35); }
+.dvx-cta svg { width: 16px; height: 16px; }
+.dvx-note { margin-top: 10px; font-size: 11px; color: rgba(255, 255, 255, 0.45); }
+
+/* ---------- bigger, brighter text (phone first) ---------- */
+.dvc .lxs-txt p { max-width: 34ch; font-size: 17px; line-height: 1.5; color: rgba(255, 255, 255, 0.88); }
+.dvc .lxs-txt h3 { font-size: 25px; line-height: 1.2; text-shadow: 0 0 22px rgba(103, 232, 249, 0.35); }
+.dvc .lxs-txt h3 span { color: #fbbf24; text-shadow: 0 0 22px rgba(251, 191, 36, 0.45); }
+.dvc .lxs-eyebrow { font-size: 13.5px; font-weight: 700; letter-spacing: 0.2em; color: #67e8f9; }
+.dvc .dvc-badge { font-size: 13px; padding: 3px 8px; }
+.dvc .dv-tag { font-size: 11.5px; padding: 3px 7px; }
+.dvc-live { font-size: 11px; }
+.dvc-chip { font-size: 12.5px; padding: 6px 11px; }
+.dvc-pills span { font-size: 16px; padding: 9px 15px; }
+.dvc-pills span:not(.hot) { color: #fff; border-color: rgba(103, 232, 249, 0.5); background: rgba(103, 232, 249, 0.1); }
+
+.dvx { padding: 30px 8px 26px; }
+.dvx-eyebrow { font-size: 13px; letter-spacing: 0.18em; }
+.dvx-head h2 { font-size: 29px; }
+.dvx-head p { font-size: 16.5px; color: rgba(255, 255, 255, 0.88); }
+.dvx-grid { gap: 8px; }
+.dvx-col { padding: 16px 6px 14px; }
+.dvx-flag { font-size: 11px; padding: 5px 11px; top: -12px; }
+.dvx-ttl small { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; color: #cbd5e1; }
+.dvx-ttl b { font-size: 17px; line-height: 1.2; }
+.dvx-cam { height: 118px; }
+.dvx-notes div { font-size: 13px; line-height: 1.32; color: #e2e8f0; }
+.dvx-notes i { margin-top: 5px; }
+.dv-tag { font-size: 10px; }
+.dvx-div b { font-size: 9px; }
+.dvx-x { font-size: 10px; }
+.dvx-ctrl em { font-size: 11.5px; color: #cbd5e1; }
+.dvx-foot { font-size: 14px; font-weight: 800; color: #cbd5e1; justify-content: center; }
+.dvx-foot svg { width: 15px; height: 15px; }
+.dvx-col.ours .dvx-foot { text-shadow: 0 0 14px rgba(251, 191, 36, 0.45); }
+.dvx-stat { padding: 12px 4px; }
+.dvx-stat b { font-size: 21px; }
+.dvx-stat b s { color: #cbd5e1; }
+.dvx-stat small { font-size: 12.5px; color: #cbd5e1; }
+.dvx-cta { font-size: 15px; padding: 16px 30px; }
+.dvx-cta svg { width: 19px; height: 19px; }
+.dvx-note { font-size: 12px; color: rgba(255, 255, 255, 0.55); }
+
+@media (min-width: 640px) {
+  .dvx-head h2 { font-size: 36px; }
+  .dvx-head p { font-size: 17px; }
+  .dvx-grid { gap: 18px; }
+  .dvx-col { padding: 22px 16px 18px; gap: 14px; }
+  .dvx-ttl small { font-size: 12px; }
+  .dvx-ttl b { font-size: 21px; }
+  .dvx-cam { height: 180px; }
+  .dvx-notes div { font-size: 14.5px; }
+  .dvx-phone { max-width: 250px; border-radius: 34px; padding: 8px; }
+  .dvx-scr { border-radius: 27px; gap: 6px; padding: 17% 6px 8px; }
+  .dv-tag { font-size: 11px; }
+  .dvx-div b { font-size: 9px; }
+  .dvx-ctrl-row span { width: 28px; height: 28px; }
+  .dvx-ctrl-row svg { width: 13px; height: 13px; }
+  .dvx-foot { font-size: 15px; }
+  .dvx-stats { gap: 14px; }
+  .dvx-stat { padding: 14px 10px; }
+  .dvx-stat b { font-size: 24px; }
+  .dvx-stat small { font-size: 14px; }
+}
+@media (min-width: 900px) {
+  .dvx { padding: 48px 0 32px; }
+  .dvx-cam { height: 210px; }
+  .dvx-phone { max-width: 270px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dv-scan, .dv-rec, .dv-led, .dv-pulse, .dvc-lensring.wave, .lxs-block.is-in .dvc-beam { animation: none !important; }
+  .dvc-beam { opacity: 0.6; }
+  .dvc-screen { transition: none !important; }
+}
