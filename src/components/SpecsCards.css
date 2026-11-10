@@ -33,6 +33,12 @@
 .lxs-led.ir { width: 18%; background: radial-gradient(circle, rgba(255, 150, 150, 0.95) 0%, rgba(239, 68, 68, 0.55) 20%, rgba(220, 38, 38, 0.18) 42%, transparent 66%); }
 .lxs-block.is-in .lxs-led.w { opacity: 1; transition-delay: 0.9s; }
 .lxs-block.is-in .lxs-led.ir { opacity: 0.9; transition-delay: 1.25s; }
+/* floodlight panels switching on one by one */
+.lxs-flood { position: absolute; width: 31%; height: 24%; transform: translate(-50%, -50%) scale(0.92); border-radius: 12%; opacity: 0; mix-blend-mode: screen; pointer-events: none;
+  background: radial-gradient(ellipse 60% 62% at 50% 50%, #ffffff 0%, rgba(255, 255, 255, 0.92) 30%, rgba(224, 242, 254, 0.55) 55%, rgba(186, 230, 253, 0.18) 75%, transparent 100%);
+  box-shadow: 0 0 40px 12px rgba(224, 242, 254, 0.35); transition: opacity 0.35s ease, transform 0.5s ease; }
+.lxs-block.is-in .lxs-flood { opacity: 1; transform: translate(-50%, -50%) scale(1); animation: lxs-flood-pulse 3.2s ease-in-out 2.2s infinite; }
+@keyframes lxs-flood-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.82; } }
 
 /* callout dot, same look as the site's product callouts */
 .lxs-ring { position: absolute; width: 34px; height: 34px; margin: -17px 0 0 -17px; border-radius: 50%; pointer-events: none;
@@ -76,7 +82,8 @@
   .lxs-ring { width: 40px; height: 40px; margin: -20px 0 0 -20px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .lxs-layer, .lxs-mod, .lxs-led, .lxs-ring, .lxs-ptz path, .lxs-txt, .lxs-halo { transition: none !important; }
+  .lxs-flood { animation: none !important; }
+  .lxs-layer, .lxs-mod, .lxs-led, .lxs-flood, .lxs-ring, .lxs-ptz path, .lxs-txt, .lxs-halo { transition: none !important; }
 }
 
 /* ---- Bluetooth pairing block ---- */

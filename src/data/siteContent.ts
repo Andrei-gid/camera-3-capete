@@ -393,7 +393,7 @@ export const DEFAULT_CONTENT: SiteContent = {
     { icon: "Wallet", text: "Plata la livrare" },
   ],
   media: {
-    specsImage: "/effects/camera-cutout.webp", // cut-out render → floating product with callouts
+    specsImage: "/products/cam3-cutout.webp", // 3-head camera cut-out (floating product, offer cards, gift)
     rotationImage: "/effects/camera-module.webp", // close-up of the lower PTZ module
     moduleTitle: "Modulul PTZ cu zoom hibrid",
     moduleSubtitle: "Două obiective, lumini LED și infraroșu, rotire și urmărire automată.",

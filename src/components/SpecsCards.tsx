@@ -3,19 +3,24 @@ import "./SpecsCards.css";
 import HybridZoomShowcase from "@/components/effects/HybridZoomShowcase";
 
 const SHOW_HZ_SCENE = false;
+// "One lens — two zones" belongs to the previous camera model; hidden on this site.
+const SHOW_DUAL_VIEW = false;
 import { DualViewSpecCard } from "@/components/DualView";
 
 // Compact technical-spec cards. Each card shows the camera render and, when it
 // scrolls into view, zooms into "its" part (lens, zoom module, LEDs, PTZ head).
 // Images: 2x versions of /effects/camera-cutout.webp and /effects/camera-module.webp.
 
-const CUT = "/effects/specs-camera.webp";
+// 3-head camera with floodlights: transparent cut-out made from the front product photo
+const CUT = "/products/cam3-cutout.webp";
 const MOD = "/effects/specs-module.webp";
-const RATIO = 485 / 856; // width / height of the cut-out render
+const RATIO = 1400 / 1098; // width / height of the cut-out render
 
 type Pt = [number, number];
-// Measured on the cut-out render, % of its width / height
-const P: Record<"top" | "upper" | "lower", Pt> = { top: [59.5, 40.5], upper: [55.5, 69], lower: [55.5, 80.5] };
+// Measured on the cut-out render, % of its width / height: the three rotating heads (lens centres)
+const P: Record<"left" | "center" | "right", Pt> = { left: [16.2, 65.8], center: [50, 83.9], right: [83.7, 65.8] };
+// The three LED floodlight panels (centres), % of the cut-out
+const FLOOD: Pt[] = [[16.3, 13.5], [50, 13.5], [83.7, 13.5]];
 // Measured on the module close-up, % of its width / height
 const LED_W: Pt[] = [[23, 50], [77, 50], [23, 62.5], [77, 62.5]];
 const LED_IR: Pt[] = [[23, 35], [77, 35], [32, 82], [50, 82], [67, 82]];
@@ -29,14 +34,15 @@ interface Card {
   end: { s: number; f: Pt };
   mod?: boolean;
   leds?: boolean;
+  flood?: boolean;
   ptz?: boolean;
   rings?: (keyof typeof P)[];
 }
 
 const CARDS: Card[] = [
-  { eb: "3 obiective", big: "3", h: "Trei camere într‑un aparat", p: "Un obiectiv fix sus și două pe capul rotativ.", end: { s: 1, f: [55, 54] }, rings: ["top", "upper", "lower"] },
-  { eb: "LED + infraroșu", big: "24/7", h: "Imagine clară și noaptea", p: "LED-uri pentru imagine color, infraroșu pentru beznă totală.", end: { s: 2.0, f: [56, 76.5] }, mod: true, leds: true },
-  { eb: "Rotire PTZ", h: "O rotiți cu un deget", p: "Stânga-dreapta și sus-jos, din aplicația V380 Pro.", end: { s: 1.15, f: [55, 60] }, ptz: true },
+  { eb: "3 capete", big: "3", h: "Trei camere într‑un aparat", p: "Trei capete cu obiectiv — trei imagini simultan în aplicație.", end: { s: 1, f: [50, 52] }, rings: ["left", "center", "right"] },
+  { eb: "3 proiectoare LED", big: "24/7", h: "Imagine clară și noaptea", p: "Trei proiectoare LED luminează curtea, iar infraroșul vede și în beznă totală.", end: { s: 1.55, f: [50, 26] }, flood: true },
+  { eb: "Rotire PTZ", h: "O rotiți cu un deget", p: "Stânga-dreapta și sus-jos, din aplicația V380 Pro.", end: { s: 1.5, f: [50, 70] }, ptz: true },
 ];
 
 const CHIPS: [string, string][] = [
@@ -61,14 +67,14 @@ const arrow = (x: number, y: number, a: number) => {
 };
 
 const ptzPaths = (g: Geo) => {
-  const e = g.end, cx = e.tx + 0.565 * g.w * e.s, cy = e.ty + 0.765 * g.h * e.s;
-  const rx = 0.62 * g.w * e.s, ry = 0.06 * g.h * e.s, by = cy + 0.15 * g.h * e.s, N = 32;
+  const e = g.end, cx = e.tx + 0.5 * g.w * e.s, cy = e.ty + 0.84 * g.h * e.s;
+  const rx = 0.2 * g.w * e.s, ry = 0.045 * g.h * e.s, by = cy + 0.14 * g.h * e.s, N = 32;
   const a0 = Math.PI * 0.1, a1 = Math.PI * 0.9;
   const pt = (a: number): Pt => [cx + rx * Math.cos(Math.PI - a), by + ry * Math.sin(Math.PI - a)];
   let pan = "";
   for (let s = 0; s <= N; s++) { const [x, y] = pt(a0 + ((a1 - a0) * s) / N); pan += (s ? "L" : "M") + x.toFixed(1) + " " + y.toFixed(1); }
   const [hx, hy] = pt(a1), [px, py] = pt(a1 - 0.06);
-  const tr = 0.2 * g.h * e.s, tcx = cx + 0.16 * g.w * e.s, b0 = -0.85, b1 = 0.85;
+  const tr = 0.16 * g.h * e.s, tcx = cx + 0.1 * g.w * e.s, b0 = -0.85, b1 = 0.85;
   let tilt = "";
   for (let s = 0; s <= N; s++) { const q = b0 + ((b1 - b0) * s) / N; tilt += (s ? "L" : "M") + (tcx + tr * Math.cos(q)).toFixed(1) + " " + (cy + tr * Math.sin(q)).toFixed(1); }
   const qx = tcx + tr * Math.cos(b1), qy = cy + tr * Math.sin(b1);
@@ -143,6 +149,7 @@ const SpecCard = ({ c }: { c: Card }) => {
           style={geo && t ? { width: geo.w, height: geo.h, transform: `translate(${t.tx}px, ${t.ty}px) scale(${t.s})` } : { opacity: 0 }}
         >
           <img src={CUT} alt="" decoding="async" draggable={false} />
+          {c.flood && FLOOD.map(([x, y], i) => <i key={"f" + i} className="lxs-flood" style={{ left: x + "%", top: y + "%", transitionDelay: `${0.85 + i * 0.18}s` }} />)}
           {c.mod && (
             <div className="lxs-mod">
               <img src={MOD} alt="" decoding="async" draggable={false} />
@@ -689,7 +696,7 @@ export const SpecsCards = () => (
     <div className="lxs-list">
       {CARDS.slice(0, 1).map((c) => <SpecCard key={c.eb} c={c} />)}
       {/* "Obiectiv panoramic" → Dual View: one top lens, two zones on the phone */}
-      <DualViewSpecCard />
+      {SHOW_DUAL_VIEW && <DualViewSpecCard />}
       {/* 10x zoom scene (camera module + phone, parking → 10x): hidden on request, kept in code.
           Set SHOW_HZ_SCENE = true to bring it back. */}
       {SHOW_HZ_SCENE && (
