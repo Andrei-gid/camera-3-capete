@@ -227,13 +227,13 @@ export const DEFAULT_CONTENT: SiteContent = {
   product: {
     title: "Cameră de Supraveghere cu 3 Obiective",
     subtitle: "Zoom Hibrid 10x • Rotire PTZ • IP66",
-    price: 650,
+    price: 800,
     oldPrice: null,
     sellerLine: "Vândut de INVEST GLOBO TECH S.R.L. • Plată la livrare",
     packages: [
-      { qty: 1, price: 650, label: "1 cameră", badge: "", featured: false, discount: 0 },
-      { qty: 2, price: 1170, label: "2 camere", badge: "-10%", featured: false, discount: 10 },
-      { qty: 3, price: 1658, label: "3 camere", badge: "-15%", featured: false, discount: 15 },
+      { qty: 1, price: 800, label: "1 cameră", badge: "", featured: false, discount: 0 },
+      { qty: 2, price: 1440, label: "2 camere", badge: "-10%", featured: false, discount: 10 },
+      { qty: 3, price: 2040, label: "3 camere", badge: "-15%", featured: false, discount: 15 },
     ],
   },
   delivery: {

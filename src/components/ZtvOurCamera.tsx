@@ -83,7 +83,7 @@ const ZtvOurCamera = ({ active }: { active: boolean }) => {
           ))}
           <img className="ztv-our-body" src={BODY} alt="" decoding="async" draggable={false} />
         </div>
-        <span className="ztv-our-price"><b>650</b>lei</span>
+        <span className="ztv-our-price"><b>800</b>lei</span>
         <span className="ztv-our-tag">3 capete</span>
       </div>
 
