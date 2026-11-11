@@ -15,7 +15,7 @@ interface Callout {
 // Measured on /effects/camera-cutout.webp (485×856).
 const CUTOUT_CALLOUTS: Callout[] = [
   { x: 59.8, y: 39.7, side: "right", text: "Obiectiv panoramic fix" },
-  { x: 56.1, y: 73.4, side: "right", text: "2 obiective · zoom hibrid 10x" },
+  { x: 56.1, y: 73.4, side: "right", text: "3 capete rotative · 180°" },
   { x: 38.8, y: 77.3, side: "left", text: "Lumini LED + infraroșu" },
   { x: 30.9, y: 28.0, side: "left", text: "Carcasă IP66 pentru exterior" },
 ];

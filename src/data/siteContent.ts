@@ -226,7 +226,7 @@ const IMG = {
 export const DEFAULT_CONTENT: SiteContent = {
   product: {
     title: "Cameră de Supraveghere cu 3 Obiective",
-    subtitle: "Zoom Hibrid 10x • Rotire PTZ • IP66",
+    subtitle: "3 Zone de Control • Rotire PTZ • IP66",
     price: 800,
     oldPrice: null,
     sellerLine: "Vândut de INVEST GLOBO TECH S.R.L. • Plată la livrare",
@@ -292,9 +292,9 @@ export const DEFAULT_CONTENT: SiteContent = {
     },
     {
       icon: "ZoomIn",
-      title: "ZOOM HIBRID 10x (Detalii de la distanță)",
+      title: "3 ZONE DE CONTROL (Fără zone moarte)",
       detail:
-        "Măriți imaginea direct din telefon și vedeți clar fețe sau numere de înmatriculare de la distanță mare, fără să vă apropiați de cameră.",
+        "Fiecare dintre cele 3 capete se rotește separat din telefon — supravegheați simultan stânga, centrul și dreapta, fără zone moarte.",
     },
     {
       icon: "RefreshCw",
@@ -359,8 +359,8 @@ export const DEFAULT_CONTENT: SiteContent = {
       {
         x: 69,
         y: 56.3,
-        title: "Două Obiective cu Zoom Hibrid 10x",
-        description: "Capul rotativ are două obiective care apropie detaliile: fețe, haine, numere de înmatriculare.",
+        title: "3 Capete Rotative",
+        description: "Fiecare cap se rotește separat din telefon — 3 imagini, 3 zone de control simultan.",
         image: IMG.photo2,
       },
       {
@@ -446,9 +446,9 @@ export const DEFAULT_CONTENT: SiteContent = {
         keywords: "plată, plata, plătesc, platesc, ramburs, card, bani, avans",
       },
       {
-        q: "Cum funcționează zoom-ul?",
-        a: "Camera are 3 obiective: cel de sus filmează permanent toată zona, iar cele două de pe capul rotativ apropie detaliile cu zoom hibrid de până la 10x. Măriți imaginea direct din aplicația V380 Pro, de pe telefon.",
-        keywords: "zoom, mărire, marire, apropie, distanță, distanta, obiective, numere",
+        q: "Cum funcționează cele 3 capete?",
+        a: "Camera are 3 capete rotative: fiecare se rotește separat din aplicația V380 Pro, iar pe telefon vedeți 3 imagini deodată — stânga, centru și dreapta. Capul din mijloc urmărește automat persoanele.",
+        keywords: "capete, rotire, zone, imagini, obiective, zoom, mărire, marire",
       },
       {
         q: "Merge cu telefonul?",
@@ -476,12 +476,12 @@ export const DEFAULT_CONTENT: SiteContent = {
   effects: {
     hybridZoom: {
       enabled: true,
-      title: "Zoom hibrid 10x",
+      title: "Zoom hibrid",
       subtitle: "Două obiective pe capul rotativ apropie detaliile de la distanță.",
       cameraImage: "/effects/hz-camera.webp",
       focusX: 55.5,
       focusY: 72,
-      lensLabel: "2 obiective • zoom hibrid 10x",
+      lensLabel: "3 capete rotative",
       sceneImage: "/effects/hz-panorama.webp",
       zoomImage: "/effects/hz-zoom.webp",
       targetX: 49,
@@ -505,7 +505,7 @@ export const DEFAULT_CONTENT: SiteContent = {
       enabled: true,
       items: [
         { value: 3, prefix: "", suffix: "", label: "obiective" },
-        { value: 10, prefix: "", suffix: "x", label: "zoom hibrid" },
+        { value: 180, prefix: "", suffix: "°", label: "rotire fiecare cap" },
         { value: 24, prefix: "", suffix: "/7", label: "supraveghere" },
         { value: 66, prefix: "IP", suffix: "", label: "protecție exterior" },
       ],
@@ -520,7 +520,7 @@ export const DEFAULT_CONTENT: SiteContent = {
         { title: "Confirmați e-mailul", text: "Introduceți codul primit pe e-mail și apăsați „Înainte”.", details: "Deschideți e-mailul primit de la aplicație.\nDacă nu îl găsiți, verificați și folderul Spam.\nIntroduceți codul în aplicație.", image: "", screen: "code", showCamera: false },
         { title: "Adăugați camera prin Bluetooth", text: "Porniți camera și apăsați „+” — telefonul o găsește.", details: "Porniți camera și așteptați să pornească complet.\nPorniți Bluetooth pe telefon.\nÎn aplicație apăsați „+” — camera apare singură în listă.", image: "", screen: "bluetooth", showCamera: true },
         { title: "Conectați camera la WiFi", text: "Alegeți rețeaua de acasă și introduceți parola.", details: "Alegeți rețeaua WiFi de acasă.\nIntroduceți parola WiFi.\nȚineți telefonul lângă cameră până apare „Conectat”.", image: "", screen: "wifi", showCamera: false },
-        { title: "Imaginea live pe telefon", text: "Gata! Vedeți în timp real tot ce vede camera — cu zoom 10x.", details: "Imaginea apare imediat în aplicație.\nRotiți camera și măriți cu zoom-ul de până la 10x.\nPrimiți notificări când camera detectează mișcare.", image: "/effects/app-live.webp", screen: "none", showCamera: false },
+        { title: "Imaginea live pe telefon", text: "Gata! Vedeți în timp real tot ce văd cele 3 capete — 3 imagini deodată.", details: "Imaginea apare imediat în aplicație.\nRotiți fiecare cap separat, direct din telefon.\nPrimiți notificări când camera detectează mișcare.", image: "/effects/app-live.webp", screen: "none", showCamera: false },
       ],
     },
     pairing: {
