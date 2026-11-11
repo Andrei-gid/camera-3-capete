@@ -10,7 +10,9 @@ const HEADS = [
   { src: "/products/cam3-h-c.webp", back: "/products/cam3-h-c-back.webp", box: [32.14, 61.11, 34.71, 38.98], amp: 90 },
   { src: "/products/cam3-h-r.webp", back: "/products/cam3-h-r-back.webp", box: [68.2, 54.5, 31.86, 27.78], amp: 90 },
 ] as const;
-const VIEW = "/effects/hz-panorama.webp";
+// 240° strip of the yard: the window shows 60° of it (background 400% wide), so when the head turns
+// −90° … +90° the picture turns exactly the same angle — the view is never just stretched.
+const VIEW = "/products/yard-240.webp";
 const LOOP = 14.2;
 const PH: [number, number][] = [[0.2, 3.4], [3.4, 6.6], [6.6, 9.8], [10.0, 14.0]];
 
@@ -47,7 +49,7 @@ const ZtvOurCamera = ({ active }: { active: boolean }) => {
         last.current[i] = v;
         const w = wins.current[i];
         if (w) {
-          w.style.backgroundPosition = `${(50 + (v / h.amp) * 50).toFixed(2)}% 62%`;
+          w.style.backgroundPosition = `${(((v + 90) / 180) * 100).toFixed(2)}% 55%`;
           w.style.filter = speed > 0.6 ? `blur(${Math.min(1.4, speed * 0.35).toFixed(2)}px)` : "none";
         }
         const d = degs.current[i];
