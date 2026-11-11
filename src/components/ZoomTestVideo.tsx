@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { useCameraProduct } from "@/hooks/useCameraProduct";
 import BigOrderButton from "@/components/BigOrderButton";
+import ZtvOurCamera from "@/components/ZtvOurCamera";
 import "./ZoomTestVideo.css";
 
 // First block after the order form: 4-second side-by-side zoom test (video made by code).
@@ -76,6 +77,7 @@ const ZoomTestVideo = () => {
           </button>
         </div>
         <div className="ztv-frame">
+          <div className="ztv-media">
           <video
             ref={videoRef}
             className="ztv-video"
@@ -86,8 +88,11 @@ const ZoomTestVideo = () => {
             playsInline
             preload="none"
             disablePictureInPicture
-            aria-label="Comparație: camera obișnuită întinde imaginea neclar, camera noastră face zoom hibrid 10x clar"
+            aria-label="Comparație: camera obișnuită întinde imaginea neclar; camera noastră are 3 capete rotative și 3 imagini"
           />
+          {/* lower half replaced live: our 3-head camera, each head turns and its window changes */}
+          <ZtvOurCamera active={inView} />
+          </div>
         </div>
       </div>
 
@@ -98,7 +103,7 @@ const ZoomTestVideo = () => {
         </div>
         <div className="ztv-pill good">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
-          <span><b>2 obiective jos</b>zoom hibrid 10x, clar</span>
+          <span><b>3 capete rotative</b>3 imagini, fiecare cap separat</span>
         </div>
       </div>
 

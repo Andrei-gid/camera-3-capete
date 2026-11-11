@@ -71,3 +71,40 @@
   .ztv-frame { transform: none !important; opacity: 1 !important; transition: none !important; }
   .ztv-eyebrow i, .ztv-live i { animation: none !important; }
 }
+
+/* ---- live lower half: our 3-head camera (drawn over the video) ---- */
+.ztv-media { position: relative; container-type: inline-size; border-radius: 24px; overflow: hidden; }
+.ztv-our { position: absolute; left: 0; right: 0; top: 51.3%; height: 42.3%; z-index: 2;
+  background: radial-gradient(ellipse 60% 70% at 18% 55%, rgba(34, 211, 238, 0.12), transparent 70%), linear-gradient(180deg, #1d2530 0%, #161c25 100%); }
+.ztv-our-cam { position: absolute; left: 1.5cqw; top: 0; width: 33cqw; height: 100%; }
+.ztv-our-rig { position: absolute; left: 0; top: 13cqw; width: 32cqw; aspect-ratio: 1400 / 1098; perspective: 420px; transform-style: preserve-3d; }
+.ztv-our-rig img { position: absolute; display: block; max-width: none; user-select: none; }
+.ztv-our-body { left: 0; top: 0; width: 100%; height: 100%; transform: translateZ(8px); filter: drop-shadow(0 1.6cqw 1.6cqw rgba(0, 0, 0, 0.6)); }
+.ztv-our-hd { position: absolute; transform-style: preserve-3d; }
+.ztv-our-hd img { left: 0; top: 0; width: 100%; height: 100%; transform-origin: 50% 50%; backface-visibility: hidden; will-change: transform; filter: drop-shadow(0 1.2cqw 1.2cqw rgba(0, 0, 0, 0.55)); }
+.ztv-our-hd.on img { filter: drop-shadow(0 1.2cqw 1.2cqw rgba(0, 0, 0, 0.55)) drop-shadow(0 0 1cqw rgba(103, 232, 249, 0.6)); }
+.ztv-our-shade { position: absolute; inset: 0; opacity: 0; pointer-events: none; transform-origin: 50% 50%; }
+.ztv-our-num { position: absolute; left: 50%; bottom: -2.8cqw; transform: translateX(-50%); width: 3cqw; height: 3cqw; border-radius: 50%; display: grid; place-items: center;
+  font: 800 1.7cqw/1 system-ui, sans-serif; color: #0b1220; background: rgba(148, 163, 184, 0.8); transition: background 0.3s, box-shadow 0.3s; }
+.ztv-our-hd.on .ztv-our-num { background: #67e8f9; box-shadow: 0 0 1.4cqw rgba(103, 232, 249, 0.85); }
+.ztv-our-price { position: absolute; left: 23.5cqw; top: 33.5cqw; width: 10cqw; height: 10cqw; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: #fcd34d; color: #111827; box-shadow: 0 0 0 0.5cqw rgba(252, 211, 77, 0.25); font: 600 1.8cqw/1 system-ui, sans-serif; }
+.ztv-our-price b { font: 800 3.4cqw/1 system-ui, sans-serif; }
+.ztv-our-tag { position: absolute; left: 6cqw; top: 46.2cqw; padding: 0.5cqw 1.6cqw; border-radius: 99px; background: #22c55e; color: #052e16; font: 700 1.7cqw/1.2 system-ui, sans-serif; white-space: nowrap; }
+.ztv-our-right { position: absolute; left: 34.4cqw; right: 1.1cqw; top: 2.2cqw; }
+.ztv-our-title { font: 800 3.2cqw/1.1 system-ui, sans-serif; color: #fff; letter-spacing: 0.01em; }
+.ztv-our-sub { margin-top: 0.4cqw; font: 600 1.95cqw/1.2 system-ui, sans-serif; color: #4ade80; }
+.ztv-our-screen { position: relative; margin-top: 1.6cqw; height: 37cqw; border-radius: 2cqw; border: 0.35cqw solid rgba(255, 255, 255, 0.85); background: #0b1220; padding: 1.3cqw; display: flex; flex-direction: column; gap: 1cqw; }
+.ztv-our-live { position: absolute; left: 2.2cqw; top: 2.2cqw; z-index: 2; display: inline-flex; align-items: center; gap: 0.7cqw; padding: 0.4cqw 1cqw; border-radius: 0.8cqw; background: rgba(2, 6, 23, 0.75);
+  font: 700 1.35cqw/1 system-ui, sans-serif; color: #fff; }
+.ztv-our-live i { width: 1cqw; height: 1cqw; border-radius: 50%; background: #ef4444; box-shadow: 0 0 0.8cqw #ef4444; }
+.ztv-our-wins { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8cqw; }
+.ztv-our-win { position: relative; border-radius: 1cqw; background-color: #0f172a; background-repeat: no-repeat; background-size: auto 150%; background-position: 50% 62%;
+  border: 0.3cqw solid rgba(148, 163, 184, 0.25); transition: border-color 0.3s, box-shadow 0.3s; }
+.ztv-our-win.on { border-color: #67e8f9; box-shadow: 0 0 1.6cqw rgba(103, 232, 249, 0.55); }
+.ztv-our-win span { position: absolute; left: 0.8cqw; bottom: 0.8cqw; padding: 0.3cqw 0.9cqw; border-radius: 0.7cqw; background: rgba(2, 6, 23, 0.7); color: #fff; font: 700 1.4cqw/1 system-ui, sans-serif; }
+.ztv-our-win.on span { background: #67e8f9; color: #0b1220; }
+.ztv-our-ok { display: flex; align-items: center; gap: 1cqw; padding: 1cqw 1.4cqw; border-radius: 1cqw; background: rgba(2, 6, 23, 0.85); color: #4ade80; font: 700 1.9cqw/1.15 system-ui, sans-serif; }
+.ztv-our-ok svg { width: 3cqw; height: 3cqw; flex: none; }
+.ztv-our-ok circle { fill: #22c55e; }
+.ztv-our-ok path { fill: none; stroke: #fff; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
