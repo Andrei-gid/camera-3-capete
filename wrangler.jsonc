@@ -13,8 +13,12 @@
   // Site content, uploaded photos/videos and orders. No "id" on purpose:
   // wrangler creates the namespace on first deploy and keeps reusing it.
   "kv_namespaces": [{ "binding": "KV" }],
-  // Own domain: added later (Settings → Domains & Routes or "routes" here).
-  // Until then the site runs on camera-3-capete.<account>.workers.dev
+  // Own domain: luxcam.md (moved here from camera-moldova on 2026-11-11).
+  // To give it back: remove these routes + the domains in the dashboard first.
+  "routes": [
+    { "pattern": "luxcam.md", "custom_domain": true },
+    { "pattern": "www.luxcam.md", "custom_domain": true }
+  ],
   // Not secret: the Telegram chat that receives orders. The bot token stays a
   // Secret in the dashboard (Settings → Variables and Secrets).
   "vars": { "TELEGRAM_CHAT_ID": "270443525" },
