@@ -379,3 +379,6 @@
 .lxs-walk.is-walking { animation: lxs-bob 0.5s ease-in-out infinite alternate; }
 @keyframes lxs-bob { from { transform: translateY(0) rotate(0deg); } to { transform: translateY(-2.5%) rotate(0.6deg); } }
 @media (prefers-reduced-motion: reduce) { .lxs-walk.is-walking { animation: none; } }
+
+/* pre-rendered clip card (rotating lamps) */
+.lxs-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }

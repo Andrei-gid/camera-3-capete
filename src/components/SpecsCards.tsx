@@ -38,11 +38,13 @@ interface Card {
   flood?: boolean;
   ptz?: boolean;
   rings?: (keyof typeof P)[];
+  video?: string; // pre-rendered clip instead of the camera layer
 }
 
 const CARDS: Card[] = [
   { eb: "3 capete", big: "3", h: "Trei camere într‑un aparat", p: "Trei capete cu obiectiv — trei imagini simultan în aplicație.", end: { s: 0.86, f: [50, 52] }, rings: ["left", "center", "right"] },
   { eb: "3 proiectoare LED", big: "24/7", h: "Imagine clară și noaptea", p: "Trei proiectoare LED luminează curtea, iar infraroșul vede și în beznă totală.", end: { s: 1.05, f: [50, 34] }, flood: true },
+  { eb: "Lămpi rotative", h: "Lumina exact unde aveți nevoie", p: "Cele 3 lămpi LED puternice se rotesc manual stânga-dreapta și sus-jos — direcționați lumina spre zona dorită.", end: { s: 1, f: [50, 50] }, video: "/video/lampi-rotative.mp4" },
   { eb: "Rotire PTZ", h: "O rotiți cu un deget", p: "Stânga-dreapta și sus-jos, din aplicația V380 Pro.", end: { s: 1.5, f: [50, 70] }, ptz: true },
 ];
 
@@ -145,6 +147,9 @@ const SpecCard = ({ c }: { c: Card }) => {
     <article ref={cardRef} className={"lxs-block" + (shown ? " is-in" : "")}>
       <div ref={viewRef} className="lxs-view">
         <div className="lxs-halo" aria-hidden="true" />
+        {c.video ? (
+          <video className="lxs-video" src={shown ? c.video : undefined} poster={c.video.replace(".mp4", "-poster.jpg")} muted loop playsInline autoPlay preload="none" aria-label={c.h} />
+        ) : (
         <div
           className="lxs-layer"
           style={geo && t ? { width: geo.w, height: geo.h, transform: `translate(${t.tx}px, ${t.ty}px) scale(${t.s})` } : { opacity: 0 }}
@@ -159,6 +164,7 @@ const SpecCard = ({ c }: { c: Card }) => {
             </div>
           )}
         </div>
+        )}
         {ptz && geo && (
           <svg className="lxs-ptz" viewBox={`0 0 ${geo.W} ${geo.H}`} aria-hidden="true">
             <path pathLength={1} d={ptz.pan} />
