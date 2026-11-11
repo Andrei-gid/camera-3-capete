@@ -35,16 +35,15 @@ jobs:
               --disable-features=Translate,TranslateUI --disable-gpu-vsync --password-store=basic \
               "https://luxcam.md/?ad=$1" >/dev/null 2>&1 &
             CP=$!
-            sleep 12
+            sleep 14
             ffmpeg -y -loglevel error -f x11grab -draw_mouse 0 -framerate 30 -video_size ${2}x${3} -i :99 -t 15.5 \
               -c:v libx264 -preset slow -crf 16 -pix_fmt yuv420p -movflags +faststart /tmp/out/$5.mp4
             kill $CP || true; sleep 1; kill $XP || true; sleep 1
             ffmpeg -y -loglevel error -ss 7 -i /tmp/out/$5.mp4 -frames:v 1 -vf scale=360:-1 /tmp/out/$5-preview.jpg
           }
-          rec ztv 1080 1920 2.5 vezi-diferenta-9x16-reels
-          rec th3 1080 1920 2.5 trei-capete-9x16-reels
-          rec ztv 1080 1080 1   vezi-diferenta-1x1
-          rec th3 1080 1080 1   trei-capete-1x1
+          sleep 100   # let the site deploy (ad-mode re-fit) finish
+          rec ztv 1080 1920 1   vezi-diferenta-9x16-reels
+          rec th3 1080 1920 1.5 trei-capete-9x16-reels
           ls -la /tmp/out
       - name: Push results
         run: |
