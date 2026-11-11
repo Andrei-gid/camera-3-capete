@@ -87,7 +87,7 @@
 .ztv-our-num { position: absolute; left: 50%; bottom: -2.8cqw; transform: translateX(-50%); width: 3cqw; height: 3cqw; border-radius: 50%; display: grid; place-items: center;
   font: 800 1.7cqw/1 system-ui, sans-serif; color: #0b1220; background: rgba(148, 163, 184, 0.8); transition: background 0.3s, box-shadow 0.3s; }
 .ztv-our-hd.on .ztv-our-num { background: #67e8f9; box-shadow: 0 0 1.4cqw rgba(103, 232, 249, 0.85); }
-.ztv-our-price { position: absolute; left: 23.5cqw; top: 33.5cqw; width: 10cqw; height: 10cqw; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center;
+.ztv-our-price { position: absolute; left: 22.5cqw; top: 39.5cqw; width: 10cqw; height: 10cqw; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center;
   background: #fcd34d; color: #111827; box-shadow: 0 0 0 0.5cqw rgba(252, 211, 77, 0.25); font: 600 1.8cqw/1 system-ui, sans-serif; }
 .ztv-our-price b { font: 800 3.4cqw/1 system-ui, sans-serif; }
 .ztv-our-tag { position: absolute; left: 6cqw; top: 46.2cqw; padding: 0.5cqw 1.6cqw; border-radius: 99px; background: #22c55e; color: #052e16; font: 700 1.7cqw/1.2 system-ui, sans-serif; white-space: nowrap; }
