@@ -69,7 +69,7 @@ const ZtvOldCamera = ({ active }: { active: boolean }) => {
         <div className="ztv-our-screen ztv-old-screen">
           <span className="ztv-our-live"><i />LIVE 24.10.2026 18:42</span>
           <div className="ztv-our-wins two">
-            <div className="ztv-our-win fixed" style={{ backgroundImage: `url(${VIEW})` }}>
+            <div className="ztv-our-win is-static" style={{ backgroundImage: `url(${VIEW})` }}>
               <span>Sus · fix</span>
               <i className="ztv-old-pin" aria-hidden="true">
                 <svg viewBox="0 0 24 24"><path d="M7 11V8a5 5 0 0 1 10 0v3M6 11h12v9H6z" /></svg>

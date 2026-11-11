@@ -131,8 +131,8 @@
 .ztv-old-sub { margin-top: 0.4cqw; font: 600 1.95cqw/1.2 system-ui, sans-serif; color: #f87171; }
 .ztv-old-screen { height: 37cqw; }
 .ztv-our-wins.two { grid-template-columns: 1fr 1fr; }
-.ztv-our-win.fixed { border-color: rgba(248, 113, 113, 0.55); filter: saturate(0.85); }
-.ztv-our-win.fixed span { background: rgba(127, 29, 29, 0.85); color: #fecaca; }
+.ztv-our-win.is-static { border-color: rgba(248, 113, 113, 0.55); filter: saturate(0.85); }
+.ztv-our-win.is-static span { background: rgba(127, 29, 29, 0.85); color: #fecaca; }
 .ztv-old-pin { position: absolute; right: 0.8cqw; top: 0.8cqw; width: 3.4cqw; height: 3.4cqw; border-radius: 50%; display: grid; place-items: center; background: rgba(127, 29, 29, 0.9); color: #fecaca; }
 .ztv-old-bad { display: flex; align-items: center; gap: 1cqw; padding: 1cqw 1.4cqw; border-radius: 1cqw; background: rgba(2, 6, 23, 0.85); color: #f87171; font: 700 1.9cqw/1.15 system-ui, sans-serif; }
 .ztv-old-bad svg { width: 3cqw; height: 3cqw; flex: none; }
