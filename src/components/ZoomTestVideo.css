@@ -145,9 +145,9 @@
   border-top: 0.14cqw solid rgb(211, 188, 131); display: flex; align-items: center; gap: 1cqw; padding: 0 2.6cqw 0 3.1cqw;
   font-family: "Inter", system-ui, -apple-system, sans-serif; }
 .ztv-cover-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.5cqw; }
-.ztv-cover-txt b { font-weight: 800; font-size: 2.35cqw; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ztv-cover-txt b { font-weight: 800; font-size: 2.05cqw; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ztv-cover-txt small { font-size: 1.85cqw; color: rgba(203, 213, 225, 0.8); white-space: nowrap; }
-.ztv-cover-price { flex: none; display: inline-flex; align-items: center; justify-content: center; height: 4.6cqw; padding: 0 3cqw;
+.ztv-cover-price { flex: none; display: inline-flex; align-items: center; justify-content: center; height: 4.6cqw; padding: 0 2.6cqw;
   border-radius: 999px; background: #fbbf24; color: #111; font-weight: 800; font-size: 2.6cqw; }
-.ztv-cover-cta { flex: none; display: inline-flex; align-items: center; justify-content: center; height: 4.6cqw; padding: 0 4.4cqw;
+.ztv-cover-cta { flex: none; display: inline-flex; align-items: center; justify-content: center; height: 4.6cqw; padding: 0 3.4cqw;
   border-radius: 999px; background: #5ccdf8; color: #0b1220; font-weight: 700; font-size: 2.2cqw; text-decoration: none; }

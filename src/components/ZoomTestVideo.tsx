@@ -61,7 +61,7 @@ const ZoomTestVideo = () => {
           3 zone de control <span>simultan</span>
         </h2>
         <p>
-          Aceeași parcare. La camera obișnuită se rotește doar un cap — stânga și dreapta rămân
+          Aceeași parcare. La camera obișnuită se rotește doar un cap — stânga și dreapta rămân{" "}
           <b>zone moarte</b>. Camera noastră supraveghează <b>3 zone deodată</b>, fiecare cap se rotește
           separat din telefon.
         </p>
