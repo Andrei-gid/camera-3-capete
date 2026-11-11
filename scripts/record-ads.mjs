@@ -30,6 +30,7 @@ const CLOCK = `(() => {
 const browser = await chromium.launch({ channel: process.env.PW_CHANNEL || "chrome" }); // Chrome: has the H.264 codec for the mp4
 for (const L of LAYOUTS) {
   for (const B of BLOCKS) {
+    console.log("start", B.key, L.key);
     const ctx = await browser.newContext({ viewport: { width: L.width, height: L.height }, deviceScaleFactor: L.dsf });
     await ctx.addInitScript(CLOCK);
     const page = await ctx.newPage();
@@ -59,7 +60,8 @@ for (const L of LAYOUTS) {
     await page.evaluate(async () => {
       const v = document.querySelector("section.ztv video");
       if (v) { v.pause(); if (v.readyState < 2) await new Promise((r) => { v.addEventListener("loadeddata", r, { once: true }); setTimeout(r, 8000); }); }
-      await Promise.all([...document.images].map((im) => (im.complete ? 0 : new Promise((r) => { im.onload = im.onerror = r; }))));
+      // lazy images below the block never load: wait at most 6 s
+      await Promise.race([Promise.all([...document.images].map((im) => (im.complete ? 0 : new Promise((r) => { im.onload = im.onerror = r; })))), new Promise((r) => setTimeout(r, 6000))]);
     });
     await page.waitForTimeout(1500);
     // freeze CSS animations; we set their time per frame
@@ -82,6 +84,7 @@ for (const L of LAYOUTS) {
           }
         }
       }, { t, t0 });
+      if (f % 60 === 0) console.log(B.key, L.key, "frame", f, "/", n);
       await el.screenshot({ path: `${dir}/f${String(f).padStart(5, "0")}.png`, animations: "allow", omitBackground: true });
     }
     const box = await el.boundingBox();
