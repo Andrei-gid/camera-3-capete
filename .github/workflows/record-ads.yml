@@ -26,15 +26,17 @@ jobs:
           rec () { # block W H dsf name
             Xvfb :99 -screen 0 ${2}x${3}x24 -nolisten tcp >/dev/null 2>&1 &
             XP=$!; sleep 2
-            rm -rf /tmp/prof
+            rm -rf /tmp/prof && mkdir -p /tmp/prof/Default
+            echo '{"translate":{"enabled":false},"translate_blocked_languages":["ro","en"],"intl":{"accept_languages":"ro,en"}}' > /tmp/prof/Default/Preferences
+            WW=$(python3 -c "print(round($2/$4))"); WH=$(python3 -c "print(round($3/$4))")
             DISPLAY=:99 google-chrome --no-first-run --no-default-browser-check --disable-infobars \
-              --kiosk --window-position=0,0 --window-size=${2},${3} --force-device-scale-factor=$4 \
+              --kiosk --lang=ro --window-position=0,0 --window-size=$WW,$WH --force-device-scale-factor=$4 \
               --user-data-dir=/tmp/prof --autoplay-policy=no-user-gesture-required --hide-scrollbars \
               --disable-features=Translate,TranslateUI --disable-gpu-vsync --password-store=basic \
               "https://luxcam.md/?ad=$1" >/dev/null 2>&1 &
             CP=$!
             sleep 12
-            ffmpeg -y -loglevel error -f x11grab -framerate 30 -video_size ${2}x${3} -i :99 -t 15.5 \
+            ffmpeg -y -loglevel error -f x11grab -draw_mouse 0 -framerate 30 -video_size ${2}x${3} -i :99 -t 15.5 \
               -c:v libx264 -preset slow -crf 16 -pix_fmt yuv420p -movflags +faststart /tmp/out/$5.mp4
             kill $CP || true; sleep 1; kill $XP || true; sleep 1
             ffmpeg -y -loglevel error -ss 7 -i /tmp/out/$5.mp4 -frames:v 1 -vf scale=360:-1 /tmp/out/$5-preview.jpg
