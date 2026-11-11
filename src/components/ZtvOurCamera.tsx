@@ -75,7 +75,7 @@ const ZtvOurCamera = ({ active }: { active: boolean }) => {
           {HEADS.map((h, i) => (
             <div key={i} className={"ztv-our-hd" + (on(i) ? " on" : "")}
               style={{ left: h.box[0] + "%", top: h.box[1] + "%", width: h.box[2] + "%", height: h.box[3] + "%" }}>
-              <HeadCyl front={h.src} back={h.back} bind={binders.current[i]} />
+              <HeadCyl front={h.src.replace(".webp", "-front-op.webp")} back={h.back.replace(".webp", "-op.webp")} mask={h.src} bind={binders.current[i]} />
               <span className="ztv-our-num">{i + 1}</span>
             </div>
           ))}

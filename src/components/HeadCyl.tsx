@@ -9,11 +9,11 @@ import { useEffect, useMemo, useRef } from "react";
  *
  * Parent drives it imperatively (no re-render per frame): bind((deg) => ...) gives a setter.
  */
-type Props = { front: string; back: string; bind: (set: (deg: number) => void) => void; className?: string };
+type Props = { front: string; back: string; mask: string; bind: (set: (deg: number) => void) => void; className?: string };
 
 const TH_MAX = 75; // half-arc of the front photo, degrees
-const NF = 18; // slices on the front arc
-const NB = 12; // slices on the back arc
+const NF = 24; // slices on the front arc
+const NB = 14; // slices on the back arc
 const R = 50 / Math.sin((TH_MAX * Math.PI) / 180); // radius in cqw (head box width = 100cqw)
 const rad = (d: number) => (d * Math.PI) / 180;
 
@@ -41,7 +41,7 @@ const buildSlices = (): Slice[] => {
   return out;
 };
 
-const HeadCyl = ({ front, back, bind, className }: Props) => {
+const HeadCyl = ({ front, back, mask, bind, className }: Props) => {
   const slices = useMemo(buildSlices, []);
   const rotRef = useRef<HTMLDivElement>(null);
   const els = useRef<(HTMLDivElement | null)[]>([]);
@@ -63,7 +63,9 @@ const HeadCyl = ({ front, back, bind, className }: Props) => {
   }, [bind, slices]);
 
   return (
-    <div className={"hcyl " + (className || "")}>
+    // the head is a body of revolution, so its outline stays the same at any angle: clip the whole
+    // cylinder to the head silhouette → clean edges, no slice shards at 90°
+    <div className={"hcyl " + (className || "")} style={{ WebkitMask: `url(${mask}) center / 100% 100% no-repeat`, mask: `url(${mask}) center / 100% 100% no-repeat` }}>
       <div className="hcyl-rot" ref={rotRef}>
         {slices.map((s, i) => (
           <div
