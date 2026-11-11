@@ -36,14 +36,13 @@ jobs:
               "https://luxcam.md/?ad=$1" >/dev/null 2>&1 &
             CP=$!
             sleep 14
-            ffmpeg -y -loglevel error -f x11grab -draw_mouse 0 -framerate 30 -video_size ${2}x${3} -i :99 -t 15.5 \
+            ffmpeg -y -loglevel error -f x11grab -draw_mouse 0 -framerate 30 -video_size ${2}x${3} -i :99 -t 20.5 \
               -c:v libx264 -preset veryfast -crf 14 -pix_fmt yuv420p -movflags +faststart /tmp/out/$5.mp4
             kill $CP || true; sleep 1; kill $XP || true; sleep 1
             ffmpeg -y -loglevel error -ss 7 -i /tmp/out/$5.mp4 -frames:v 1 -vf scale=360:-1 /tmp/out/$5-preview.jpg
           }
-          rec ztv 1440 2560 2 raw-ztv-mobile
-          rec th3 1440 2560 2 raw-th3-mobile
-          rec th3 2160 1200 2 raw-th3-desktop
+          rec ztv 1440 2560 2 raw-ztv-mobile-v2
+          rec ztv 1440 2560 2 raw-ztv-mobile-v2b
           ls -la /tmp/out
       - name: Push results
         run: |
