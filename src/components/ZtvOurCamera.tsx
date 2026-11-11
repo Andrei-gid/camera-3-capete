@@ -1,29 +1,37 @@
 import { useEffect, useRef, useState } from "react";
+import HeadCyl from "@/components/HeadCyl";
 
 // Lower half of the "Vezi diferența" video, drawn live on top of it:
 // our 3-head camera — each head turns in turn, and its own window on the screen changes view.
 const BODY = "/products/cam3-body3.webp";
+// every head turns 180° (−90° … +90°) like the real camera
 const HEADS = [
-  { src: "/products/cam3-h-l.webp", box: [0, 54.5, 31.79, 27.78], amp: 34 },
-  { src: "/products/cam3-h-c.webp", box: [32.14, 61.11, 34.71, 38.98], amp: 44 },
-  { src: "/products/cam3-h-r.webp", box: [68.2, 54.5, 31.86, 27.78], amp: 34 },
+  { src: "/products/cam3-h-l.webp", back: "/products/cam3-h-l-back.webp", box: [0, 54.5, 31.79, 27.78], amp: 90 },
+  { src: "/products/cam3-h-c.webp", back: "/products/cam3-h-c-back.webp", box: [32.14, 61.11, 34.71, 38.98], amp: 90 },
+  { src: "/products/cam3-h-r.webp", back: "/products/cam3-h-r-back.webp", box: [68.2, 54.5, 31.86, 27.78], amp: 90 },
 ] as const;
 const VIEW = "/effects/hz-panorama.webp";
-const BASE = [14, 50, 86]; // which part of the yard each head looks at
-const LOOP = 9;
-const PH: [number, number][] = [[0.2, 2.2], [2.2, 4.2], [4.2, 6.2], [6.4, 8.8]];
+const LOOP = 14.2;
+const PH: [number, number][] = [[0.2, 3.4], [3.4, 6.6], [6.6, 9.8], [10.0, 14.0]];
 
 const ease = (x: number) => (x < 0 ? 0 : x > 1 ? 1 : 0.5 - 0.5 * Math.cos(Math.PI * x));
+// PTZ motor profile inside [a, b]: 0 → full left, short stop, sweep to full right, short stop, back to 0
 const swing = (t: number, a: number, b: number) => {
   if (t <= a || t >= b) return 0;
   const u = (t - a) / (b - a);
-  return Math.sin(u * Math.PI * 2) * ease(Math.min(1, u * 4)) * ease(Math.min(1, (1 - u) * 4));
+  if (u < 0.2) return -ease(u / 0.2);
+  if (u < 0.3) return -1;
+  if (u < 0.72) return -1 + 2 * ease((u - 0.3) / 0.42);
+  if (u < 0.82) return 1;
+  return 1 - ease((u - 0.82) / 0.18);
 };
 
 const ZtvOurCamera = ({ active }: { active: boolean }) => {
-  const imgs = useRef<(HTMLImageElement | null)[]>([]);
-  const shades = useRef<(HTMLDivElement | null)[]>([]);
+  const setters = useRef<((deg: number) => void)[]>([]);
+  const binders = useRef(HEADS.map((_, i) => (fn: (deg: number) => void) => { setters.current[i] = fn; }));
   const wins = useRef<(HTMLDivElement | null)[]>([]);
+  const degs = useRef<(HTMLElement | null)[]>([]);
+  const last = useRef<number[]>([0, 0, 0]);
   const [phase, setPhase] = useState(-1);
   const pRef = useRef(-1);
 
@@ -33,17 +41,17 @@ const ZtvOurCamera = ({ active }: { active: boolean }) => {
       const all = swing(t, PH[3][0], PH[3][1]);
       HEADS.forEach((h, i) => {
         const v = (swing(t, PH[i][0], PH[i][1]) + all * (i === 0 ? -1 : 1)) * h.amp;
-        const tf = `translateX(${(Math.sin((v * Math.PI) / 180) * 7).toFixed(2)}%) rotateY(${v.toFixed(2)}deg)`;
-        const im = imgs.current[i];
-        if (im) im.style.transform = tf;
-        const sh = shades.current[i];
-        if (sh) {
-          sh.style.transform = tf;
-          sh.style.opacity = String(Math.min(0.7, Math.abs(v) / 60));
-          sh.style.background = `linear-gradient(${v >= 0 ? 90 : 270}deg, rgba(0,0,0,0.85), rgba(0,0,0,0) 55%)`;
-        }
+        setters.current[i]?.(v);
+        // the window shows what the head looks at: full left → full right of the yard, slight motion blur
+        const speed = Math.abs(v - last.current[i]);
+        last.current[i] = v;
         const w = wins.current[i];
-        if (w) w.style.backgroundPosition = `${(BASE[i] - (v / h.amp) * 13).toFixed(1)}% 62%`;
+        if (w) {
+          w.style.backgroundPosition = `${(50 + (v / h.amp) * 50).toFixed(2)}% 62%`;
+          w.style.filter = speed > 0.6 ? `blur(${Math.min(1.4, speed * 0.35).toFixed(2)}px)` : "none";
+        }
+        const d = degs.current[i];
+        if (d) d.textContent = `${v > 0.5 ? "+" : v < -0.5 ? "−" : ""}${Math.abs(Math.round(v))}°`;
       });
       let p = -1;
       PH.forEach(([a, b], i) => { if (t >= a && t < b) p = i; });
@@ -67,9 +75,7 @@ const ZtvOurCamera = ({ active }: { active: boolean }) => {
           {HEADS.map((h, i) => (
             <div key={i} className={"ztv-our-hd" + (on(i) ? " on" : "")}
               style={{ left: h.box[0] + "%", top: h.box[1] + "%", width: h.box[2] + "%", height: h.box[3] + "%" }}>
-              <img ref={(el) => { imgs.current[i] = el; }} src={h.src} alt="" decoding="async" draggable={false} />
-              <div ref={(el) => { shades.current[i] = el; }} className="ztv-our-shade"
-                style={{ WebkitMask: `url(${h.src}) center / 100% 100% no-repeat`, mask: `url(${h.src}) center / 100% 100% no-repeat` }} />
+              <HeadCyl front={h.src} back={h.back} bind={binders.current[i]} />
               <span className="ztv-our-num">{i + 1}</span>
             </div>
           ))}
@@ -88,7 +94,7 @@ const ZtvOurCamera = ({ active }: { active: boolean }) => {
             {[0, 1, 2].map((i) => (
               <div key={i} ref={(el) => { wins.current[i] = el; }} className={"ztv-our-win" + (on(i) ? " on" : "")}
                 style={{ backgroundImage: `url(${VIEW})` }}>
-                <span>Cap {i + 1}</span>
+                <span>Cap {i + 1} · <em ref={(el) => { degs.current[i] = el; }}>0°</em></span>
               </div>
             ))}
           </div>
