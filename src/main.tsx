@@ -58,7 +58,7 @@ if (AD_BLOCK && AD_SEL[AD_BLOCK]) {
   const style = document.createElement("style");
   style.textContent = `html,body{overflow:hidden!important}
     .ad-hide{display:none!important}
-    ${sel}{min-height:100vh;display:flex!important;flex-direction:column;justify-content:center;margin:0!important}`;
+    ${sel}{margin:0 auto!important}`;
   document.head.appendChild(style);
   const clean = () => {
     const target = document.querySelector(sel);
@@ -75,7 +75,20 @@ if (AD_BLOCK && AD_SEL[AD_BLOCK]) {
     });
     window.scrollTo(0, 0);
   };
+  // fit the whole block on the screen, vertically centred
+  const fit = () => {
+    const t = document.querySelector<HTMLElement>(sel);
+    if (!t) return;
+    t.style.zoom = "1";
+    const h = t.getBoundingClientRect().height;
+    const k = Math.min(1, (window.innerHeight - 16) / h);
+    t.style.zoom = String(k);
+    t.style.marginTop = Math.max(0, (window.innerHeight - h * k) / 2 / k) + "px";
+  };
   setInterval(clean, 400);
+  window.setTimeout(fit, 1200);
+  window.setTimeout(fit, 3000);
+  window.addEventListener("resize", () => window.setTimeout(fit, 200));
 }
 
 // Meta Pixel with the ID saved in /admin (no tracking inside the admin panel).
