@@ -134,3 +134,20 @@
 .ztv-old-bad svg { width: 3cqw; height: 3cqw; flex: none; }
 .ztv-old-bad circle { fill: #ef4444; }
 .ztv-old-bad path { fill: none; stroke: #fff; stroke-width: 2.6; stroke-linecap: round; }
+
+/* covers over the old zoom video: new title + bottom bar (3 zone de control) */
+.ztv-cover-title { position: absolute; left: 0; right: 0; top: 0; height: 11.75%; z-index: 3; background: rgb(53, 56, 63);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; line-height: 1.1;
+  font-family: "Inter", system-ui, -apple-system, sans-serif; }
+.ztv-cover-title b { font-weight: 800; font-size: 4.9cqw; color: #fff; letter-spacing: -0.005em; }
+.ztv-cover-title span { font-weight: 800; font-size: 4.9cqw; color: #38bdf8; }
+.ztv-cover-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 6.6%; z-index: 3; background: rgb(2, 5, 12);
+  border-top: 0.14cqw solid rgb(211, 188, 131); display: flex; align-items: center; gap: 1cqw; padding: 0 2.6cqw 0 3.1cqw;
+  font-family: "Inter", system-ui, -apple-system, sans-serif; }
+.ztv-cover-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.5cqw; }
+.ztv-cover-txt b { font-weight: 800; font-size: 2.35cqw; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ztv-cover-txt small { font-size: 1.85cqw; color: rgba(203, 213, 225, 0.8); white-space: nowrap; }
+.ztv-cover-price { flex: none; display: inline-flex; align-items: center; justify-content: center; height: 4.6cqw; padding: 0 3cqw;
+  border-radius: 999px; background: #fbbf24; color: #111; font-weight: 800; font-size: 2.6cqw; }
+.ztv-cover-cta { flex: none; display: inline-flex; align-items: center; justify-content: center; height: 4.6cqw; padding: 0 4.4cqw;
+  border-radius: 999px; background: #5ccdf8; color: #0b1220; font-weight: 700; font-size: 2.2cqw; text-decoration: none; }

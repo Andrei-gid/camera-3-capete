@@ -56,20 +56,21 @@ const ZoomTestVideo = () => {
   return (
     <section ref={wrapRef} className={"ztv" + (inView ? " is-in" : "")} aria-labelledby="ztv-title">
       <div className="ztv-head">
-        <div className="ztv-eyebrow"><i aria-hidden="true" />TEST REAL · ACEEAȘI SCENĂ</div>
+        <div className="ztv-eyebrow"><i aria-hidden="true" />TEST REAL · ACEEAȘI PARCARE</div>
         <h2 id="ztv-title">
-          Vezi diferența <span>în 4 secunde</span>
+          3 zone de control <span>simultan</span>
         </h2>
         <p>
-          Aceeași parcare, aceeași mașină. Camera obișnuită doar <b>întinde</b> imaginea —
-          camera noastră o <b>apropie clar</b>, până la numărul de înmatriculare.
+          Aceeași parcare. La camera obișnuită se rotește doar un cap — stânga și dreapta rămân
+          <b>zone moarte</b>. Camera noastră supraveghează <b>3 zone deodată</b>, fiecare cap se rotește
+          separat din telefon.
         </p>
       </div>
 
       <div className="ztv-stage">
         <div className="ztv-glow" aria-hidden="true" />
         <div className="ztv-bar">
-          <span className="ztv-live" aria-hidden="true"><i />DEMO · 4 SEC</span>
+          <span className="ztv-live" aria-hidden="true"><i />DEMO LIVE</span>
           <button type="button" className="ztv-replay" onClick={replay} aria-label="Pornește din nou">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M3 12a9 9 0 1 0 3-6.7" /><path d="M3 4v5h5" />
@@ -89,12 +90,25 @@ const ZoomTestVideo = () => {
             playsInline
             preload="none"
             disablePictureInPicture
-            aria-label="Comparație: camera obișnuită întinde imaginea neclar; camera noastră are 3 capete rotative și 3 imagini"
+            aria-label="Comparație: camera obișnuită are un singur cap rotativ și zone moarte; camera noastră are 3 capete rotative și 3 zone de control simultan"
           />
           {/* upper half replaced live: ordinary camera — top lens fixed, only the lower head turns */}
           <ZtvOldCamera active={inView} />
           {/* lower half replaced live: our 3-head camera, each head turns and its window changes */}
           <ZtvOurCamera active={inView} />
+          {/* title and bottom bar of the old zoom video, re-written for the 3-head camera */}
+          <div className="ztv-cover-title" aria-hidden="true">
+            <b>1 zonă sau 3 zone</b>
+            <span>de control?</span>
+          </div>
+          <div className="ztv-cover-bar">
+            <div className="ztv-cover-txt">
+              <b>3 zone de control simultan — fără zone moarte</b>
+              <small>Plată la livrare • Livrare în toată Moldova</small>
+            </div>
+            <span className="ztv-cover-price">{product.price} lei</span>
+            <a className="ztv-cover-cta" href="#comanda" onClick={onCta}>Comandă acum</a>
+          </div>
           </div>
         </div>
       </div>
@@ -102,16 +116,16 @@ const ZoomTestVideo = () => {
       <div className="ztv-vs">
         <div className="ztv-pill bad">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.8} strokeLinecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12" /></svg>
-          <span><b>1 obiectiv jos</b>imagine întinsă, neclară</span>
+          <span><b>1 cap rotativ</b>zone moarte stânga și dreapta</span>
         </div>
         <div className="ztv-pill good">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
-          <span><b>3 capete rotative</b>3 imagini, fiecare cap separat</span>
+          <span><b>3 capete rotative</b>3 zone de control simultan</span>
         </div>
       </div>
 
       <div className="ztv-cta-wrap">
-        <BigOrderButton href="#comanda" onClick={onCta} price={product.price} sub="Zoom real 10x · 3 imagini" />
+        <BigOrderButton href="#comanda" onClick={onCta} price={product.price} sub="3 zone de control · 3 imagini" />
         <div className="ztv-note">Plată la livrare · Verificare colet gratuită</div>
       </div>
     </section>
