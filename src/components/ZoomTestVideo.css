@@ -109,10 +109,6 @@
 .ztv-our-ok circle { fill: #22c55e; }
 .ztv-our-ok path { fill: none; stroke: #fff; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
 
-/* cylinder heads (HeadCyl) */
-.hcyl { position: absolute; inset: 0; container-type: inline-size; perspective: 700px; }
-.hcyl-rot { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
-.hcyl-s { position: absolute; left: 50%; top: 0; height: 100%; background-repeat: no-repeat; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
 .ztv-our-hd.on .hcyl { filter: drop-shadow(0 0 0.9cqw rgba(103, 232, 249, 0.55)); }
 .ztv-our-win span em { font-style: normal; font-variant-numeric: tabular-nums; }
 

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef } from "react";
+import "./HeadCyl.css";
 
 /**
  * A camera head drawn as a real 3D cylinder instead of a flat picture.

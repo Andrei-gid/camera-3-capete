@@ -1,0 +1,4 @@
+/* 3D cylinder camera head (HeadCyl) — shared by every block that turns a head */
+.hcyl { position: absolute; inset: 0; container-type: inline-size; perspective: 700px; }
+.hcyl-rot { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+.hcyl-s { position: absolute; left: 50%; top: 0; height: 100%; background-repeat: no-repeat; backface-visibility: hidden; -webkit-backface-visibility: hidden; }

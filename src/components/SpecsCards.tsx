@@ -1,3 +1,4 @@
+import HeadCyl from "@/components/HeadCyl";
 import { Component, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import "./SpecsCards.css";
 import HybridZoomShowcase from "@/components/effects/HybridZoomShowcase";
@@ -194,12 +195,15 @@ const SpecCard = ({ c }: { c: Card }) => {
 // turns after them in 3D, its view cone stays on them, the pan angle is read out live.
 // 3-head camera: only the centre head tracks; the side heads keep watching left and right.
 const CAM_BODY = "/products/cam3-track-body.webp"; // whole camera without the centre head
-const CAM_HEAD = "/products/cam3-track-head.webp"; // centre PTZ head
+// centre PTZ head as a real 3D cylinder (front photo wrapped + back side), same as in the "Vezi diferența" block
+const HEAD_FRONT = "/products/cam3-h-c-front-op.webp";
+const HEAD_BACK = "/products/cam3-h-c-back-op.webp";
+const HEAD_MASK = "/products/cam3-h-c.webp";
 
 const TrackCard = () => {
   const ref = useRef<HTMLElement>(null);
-  const headRef = useRef<HTMLImageElement>(null);
-  const shadeRef = useRef<HTMLDivElement>(null);
+  const headSet = useRef<(deg: number) => void>();
+  const bindHead = useRef((fn: (deg: number) => void) => { headSet.current = fn; });
   const manRef = useRef<HTMLDivElement>(null);
   const coneRef = useRef<SVGPathElement>(null);
   const spotRef = useRef<SVGEllipseElement>(null);
@@ -227,15 +231,8 @@ const TrackCard = () => {
       const x = OX + AMP * Math.sin(ph);
       const dir = Math.cos(ph) >= 0 ? 1 : -1;            // walking right or left
       const ang = (Math.atan2(x - OX, FY - OY) * 180) / Math.PI;
-      // the head turns: 3D rotation + its front swings towards the target + the far side darkens
-      const a = ang * 0.95, shift = Math.sin((a * Math.PI) / 180) * 9;
-      const tf = `translateX(${shift.toFixed(2)}%) rotateY(${a.toFixed(2)}deg)`;
-      if (headRef.current) headRef.current.style.transform = tf;
-      if (shadeRef.current) {
-        shadeRef.current.style.transform = tf;
-        shadeRef.current.style.opacity = String(Math.min(0.75, Math.abs(a) / 55));
-        shadeRef.current.style.background = `linear-gradient(${a >= 0 ? 90 : 270}deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 45%)`;
-      }
+      // the centre head (3D cylinder) turns to face the person; its lens slides round the curve
+      headSet.current?.(ang * 1.25);
       if (manRef.current) {
         manRef.current.style.left = `${(x / 5).toFixed(2)}%`;
         manRef.current.style.setProperty("--dir", String(dir));
@@ -288,15 +285,9 @@ const TrackCard = () => {
 
         <div className="lxs-tr-cam">
           <img className="body" src={CAM_BODY} alt="" decoding="async" draggable={false} />
-          <img ref={headRef} className="head" src={CAM_HEAD} alt="" decoding="async" draggable={false} />
-          <div
-            ref={shadeRef}
-            className="shade"
-            style={{
-              WebkitMask: `url(${CAM_HEAD}) center / 100% 100% no-repeat`,
-              mask: `url(${CAM_HEAD}) center / 100% 100% no-repeat`,
-            }}
-          />
+          <div className="head">
+            <HeadCyl front={HEAD_FRONT} back={HEAD_BACK} mask={HEAD_MASK} bind={bindHead.current} />
+          </div>
         </div>
 
         <div ref={manRef} className="lxs-tr-man" aria-hidden="true">

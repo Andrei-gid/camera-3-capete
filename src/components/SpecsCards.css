@@ -343,7 +343,7 @@
 .lxs-tr.is-in .lxs-tr-cam { opacity: 1; }
 .lxs-tr-cam img { position: absolute; max-width: none; display: block; }
 .lxs-tr-cam .body { left: 0; top: 0; width: 100%; height: 100%; z-index: 2; }
-.lxs-tr-cam .head { left: 32.14%; top: 61.11%; width: 34.64%; height: 38.89%; z-index: 1; transform-origin: 50% 50%; will-change: transform; backface-visibility: hidden; }
+.lxs-tr-cam .head { position: absolute; left: 32.14%; top: 61.11%; width: 34.71%; height: 38.98%; z-index: 1; }
 /* shading of the far side of the turning head, masked to the head's own shape */
 .lxs-tr-cam .shade { position: absolute; left: 32.14%; top: 61.11%; width: 34.64%; height: 38.89%; z-index: 1; opacity: 0; pointer-events: none; transform-origin: 50% 50%; }
 /* the person on the road */
