@@ -82,8 +82,11 @@ if (AD_BLOCK && AD_SEL[AD_BLOCK]) {
     t.style.zoom = "1";
     const h = t.getBoundingClientRect().height;
     const k = Math.min(1, (window.innerHeight - 16) / h);
-    t.style.zoom = String(k);
-    t.style.setProperty("margin", `${Math.max(0, (window.innerHeight - h * k) / 2 / k)}px auto 0`, "important");
+    t.style.zoom = String(k * 0.97);
+    t.style.setProperty("margin", "0 auto", "important");
+    const r = t.getBoundingClientRect();
+    const shift = (window.innerHeight - r.height) / 2 - r.top; // px on screen
+    t.style.setProperty("margin", `${Math.max(0, shift / (k * 0.97))}px auto 0`, "important");
   };
   setInterval(clean, 400);
   window.setTimeout(fit, 1200);
