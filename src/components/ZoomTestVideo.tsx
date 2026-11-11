@@ -25,7 +25,9 @@ const ZoomTestVideo = () => {
   useEffect(() => {
     const el = wrapRef.current;
     if (!el) return;
-    if (typeof IntersectionObserver === "undefined") { setLoad(true); setInView(true); return; }
+    // ad-recording mode (?ad=…): the block is zoomed to fit the screen, which confuses the observer
+    const adMode = new URLSearchParams(window.location.search).has("ad");
+    if (adMode || typeof IntersectionObserver === "undefined") { setLoad(true); setInView(true); return; }
     const near = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setLoad(true); near.disconnect(); } }, { rootMargin: "600px 0px" });
     const vis = new IntersectionObserver(([e]) => setInView(e.isIntersecting), { threshold: 0.35 });
     near.observe(el); vis.observe(el);

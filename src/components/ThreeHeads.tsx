@@ -62,7 +62,8 @@ const ThreeHeadsShowcase = () => {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (typeof IntersectionObserver === "undefined") { setShown(true); setOnScreen(true); return; }
+    const adMode = new URLSearchParams(window.location.search).has("ad"); // ad-recording mode: always on
+    if (adMode || typeof IntersectionObserver === "undefined") { setShown(true); setOnScreen(true); return; }
     const io = new IntersectionObserver(
       (entries) => entries.forEach((e) => { setOnScreen(e.isIntersecting); if (e.isIntersecting) setShown(true); }),
       { threshold: 0.15 },
