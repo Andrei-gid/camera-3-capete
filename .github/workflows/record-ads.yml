@@ -1,6 +1,6 @@
-# Records the two comparison blocks of luxcam.md as Facebook ad videos
-# (1:1 and 9:16) and pushes the mp4 files to the branch "ad-videos-out".
-# Runs only when the branch "record-ads" is pushed.
+# Screen-records luxcam.md/?ad=ztv and ?ad=th3 (ad mode: only the block, clean
+# screen) in real time with Chrome on a virtual display, 9:16 and 1:1, and
+# pushes the mp4 files to the branch "ad-videos-out".
 name: record-ads
 on:
   push:
@@ -10,34 +10,33 @@ permissions:
 jobs:
   record:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: 20 }
-      - name: Playwright
-        run: |
-          mkdir -p /tmp/pw && cd /tmp/pw && npm init -y >/dev/null && npm i playwright@1.48.2 >/dev/null
-          cp $GITHUB_WORKSPACE/scripts/record-ads.mjs /tmp/pw/
-      - name: Record frames
-        run: cd /tmp/pw && node record-ads.mjs
-      - name: Encode videos
+      - name: Record
         run: |
           set -e
-          BG=$GITHUB_WORKSPACE/public/images/blue-abstract-bg.jpg
+          sudo apt-get install -y -qq xvfb >/dev/null 2>&1 || true
           mkdir -p /tmp/out
-          enc () { # frames-dir out-name W H
-            W=$3; H=$4; FW=$((W-60)); FH=$((H-60))
-            ffmpeg -y -loglevel error -loop 1 -i "$BG" -framerate 30 -i "/tmp/pw/frames/$1/f%05d.png" \
-              -filter_complex "[0]scale=$W:$H:force_original_aspect_ratio=increase,crop=$W:$H,setsar=1[bg];[1]scale=$FW:$FH:force_original_aspect_ratio=decrease:flags=lanczos[fg];[bg][fg]overlay=(W-w)/2:(H-h)/2:shortest=1,format=yuv420p" \
-              -c:v libx264 -preset slow -crf 17 -r 30 -movflags +faststart "/tmp/out/$2.mp4"
-            ffmpeg -y -loglevel error -ss 6 -i "/tmp/out/$2.mp4" -frames:v 1 "/tmp/out/$2-preview.jpg"
+          rec () { # block W H dsf name
+            Xvfb :99 -screen 0 ${2}x${3}x24 -nolisten tcp >/dev/null 2>&1 &
+            XP=$!; sleep 2
+            rm -rf /tmp/prof
+            DISPLAY=:99 google-chrome --no-first-run --no-default-browser-check --disable-infobars \
+              --kiosk --window-position=0,0 --window-size=${2},${3} --force-device-scale-factor=$4 \
+              --user-data-dir=/tmp/prof --autoplay-policy=no-user-gesture-required --hide-scrollbars \
+              --disable-features=Translate,TranslateUI --disable-gpu-vsync --password-store=basic \
+              "https://luxcam.md/?ad=$1" >/dev/null 2>&1 &
+            CP=$!
+            sleep 12
+            ffmpeg -y -loglevel error -f x11grab -framerate 30 -video_size ${2}x${3} -i :99 -t 15.5 \
+              -c:v libx264 -preset slow -crf 16 -pix_fmt yuv420p -movflags +faststart /tmp/out/$5.mp4
+            kill $CP || true; sleep 1; kill $XP || true; sleep 1
+            ffmpeg -y -loglevel error -ss 7 -i /tmp/out/$5.mp4 -frames:v 1 -vf scale=360:-1 /tmp/out/$5-preview.jpg
           }
-          for b in vezi-diferenta trei-capete; do
-            enc "$b-mobile"  "$b-9x16-reels" 1080 1920
-            enc "$b-desktop" "$b-1x1"        1080 1080
-            enc "$b-mobile"  "$b-1x1-vertical-layout" 1080 1080
-          done
+          rec ztv 1080 1920 2.5 vezi-diferenta-9x16-reels
+          rec th3 1080 1920 2.5 trei-capete-9x16-reels
+          rec ztv 1080 1080 1   vezi-diferenta-1x1
+          rec th3 1080 1080 1   trei-capete-1x1
           ls -la /tmp/out
       - name: Push results
         run: |
