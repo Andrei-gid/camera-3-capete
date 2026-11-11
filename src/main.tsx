@@ -86,7 +86,7 @@ if (AD_BLOCK && AD_SEL[AD_BLOCK]) {
     t.style.setProperty("margin", "0 auto", "important");
     const r = t.getBoundingClientRect();
     const shift = (window.innerHeight - r.height) / 2 - r.top; // px on screen
-    t.style.setProperty("margin", `${Math.max(0, shift / (k * 0.97))}px auto 0`, "important");
+    t.style.setProperty("margin", `${shift / (k * 0.97)}px auto 0`, "important");
   };
   setInterval(clean, 400);
   window.setTimeout(fit, 1200);
