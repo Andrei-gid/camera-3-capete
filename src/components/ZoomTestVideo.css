@@ -115,3 +115,26 @@
 .hcyl-s { position: absolute; left: 50%; top: 0; height: 100%; background-repeat: no-repeat; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
 .ztv-our-hd.on .hcyl { filter: drop-shadow(0 0 0.9cqw rgba(103, 232, 249, 0.55)); }
 .ztv-our-win span em { font-style: normal; font-variant-numeric: tabular-nums; }
+
+/* ---- live upper half: ordinary camera (top fixed, only the lower head turns) ---- */
+.ztv-old { position: absolute; left: 0; right: 0; top: 11.85%; height: 39.45%; z-index: 2;
+  background: radial-gradient(ellipse 60% 70% at 18% 55%, rgba(248, 113, 113, 0.1), transparent 70%), linear-gradient(180deg, #232a35 0%, #1d2530 100%); }
+.ztv-old-cam { position: absolute; left: 6cqw; top: 1cqw; width: 22cqw; aspect-ratio: 404 / 800; perspective: 420px; }
+.ztv-old-top { position: absolute; left: 0; top: 0; width: 100%; height: 67.5%; display: block; max-width: none; z-index: 2; filter: drop-shadow(0 1.4cqw 1.4cqw rgba(0, 0, 0, 0.6)); }
+.ztv-old-hd { position: absolute; left: 0; top: 65.5%; width: 100%; height: 34.5%; z-index: 1; filter: drop-shadow(0 0 0.9cqw rgba(248, 113, 113, 0.35)); }
+.ztv-old-lock { position: absolute; left: 50%; top: 24%; z-index: 3; transform: translate(-50%, -50%); display: inline-flex; align-items: center; gap: 0.6cqw;
+  padding: 0.5cqw 1.3cqw; border-radius: 99px; background: rgba(127, 29, 29, 0.9); border: 0.2cqw solid rgba(248, 113, 113, 0.7); color: #fecaca; font: 700 1.6cqw/1 system-ui, sans-serif; white-space: nowrap; }
+.ztv-old-lock svg, .ztv-old-pin svg { width: 1.8cqw; height: 1.8cqw; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.ztv-old-price { left: 18.6cqw !important; top: 32cqw !important; }
+.ztv-old-tag { position: absolute; left: 5.6cqw; top: 45.2cqw; padding: 0.5cqw 1.6cqw; border-radius: 99px; background: #ef4444; color: #fff; font: 700 1.7cqw/1.2 system-ui, sans-serif; white-space: nowrap; }
+.ztv-old-right { position: absolute; left: 34.4cqw; right: 1.1cqw; top: 1.4cqw; }
+.ztv-old-sub { margin-top: 0.4cqw; font: 600 1.95cqw/1.2 system-ui, sans-serif; color: #f87171; }
+.ztv-old-screen { height: 37cqw; }
+.ztv-our-wins.two { grid-template-columns: 1fr 1fr; }
+.ztv-our-win.fixed { border-color: rgba(248, 113, 113, 0.55); filter: saturate(0.85); }
+.ztv-our-win.fixed span { background: rgba(127, 29, 29, 0.85); color: #fecaca; }
+.ztv-old-pin { position: absolute; right: 0.8cqw; top: 0.8cqw; width: 3.4cqw; height: 3.4cqw; border-radius: 50%; display: grid; place-items: center; background: rgba(127, 29, 29, 0.9); color: #fecaca; }
+.ztv-old-bad { display: flex; align-items: center; gap: 1cqw; padding: 1cqw 1.4cqw; border-radius: 1cqw; background: rgba(2, 6, 23, 0.85); color: #f87171; font: 700 1.9cqw/1.15 system-ui, sans-serif; }
+.ztv-old-bad svg { width: 3cqw; height: 3cqw; flex: none; }
+.ztv-old-bad circle { fill: #ef4444; }
+.ztv-old-bad path { fill: none; stroke: #fff; stroke-width: 2.6; stroke-linecap: round; }

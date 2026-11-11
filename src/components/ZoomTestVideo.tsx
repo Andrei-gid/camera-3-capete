@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { useCameraProduct } from "@/hooks/useCameraProduct";
 import BigOrderButton from "@/components/BigOrderButton";
 import ZtvOurCamera from "@/components/ZtvOurCamera";
+import ZtvOldCamera from "@/components/ZtvOldCamera";
 import "./ZoomTestVideo.css";
 
 // First block after the order form: 4-second side-by-side zoom test (video made by code).
@@ -90,6 +91,8 @@ const ZoomTestVideo = () => {
             disablePictureInPicture
             aria-label="Comparație: camera obișnuită întinde imaginea neclar; camera noastră are 3 capete rotative și 3 imagini"
           />
+          {/* upper half replaced live: ordinary camera — top lens fixed, only the lower head turns */}
+          <ZtvOldCamera active={inView} />
           {/* lower half replaced live: our 3-head camera, each head turns and its window changes */}
           <ZtvOurCamera active={inView} />
           </div>
