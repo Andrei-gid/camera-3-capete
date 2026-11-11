@@ -48,8 +48,38 @@ if (typeof document !== "undefined" && !window.location.pathname.startsWith("/ad
   );
 }
 
+// Ad-recording mode: luxcam.md/?ad=ztv (or ?ad=th3) shows only that block, centred
+// on a clean screen — no menu, chat buttons or pop-ups, no Pixel. For screen
+// recordings used in Facebook ads.
+const AD_BLOCK = new URLSearchParams(window.location.search).get("ad");
+const AD_SEL: Record<string, string> = { ztv: "section.ztv", th3: "section.th3" };
+if (AD_BLOCK && AD_SEL[AD_BLOCK]) {
+  const sel = AD_SEL[AD_BLOCK];
+  const style = document.createElement("style");
+  style.textContent = `html,body{overflow:hidden!important}
+    .ad-hide{display:none!important}
+    ${sel}{min-height:100vh;display:flex!important;flex-direction:column;justify-content:center;margin:0!important}`;
+  document.head.appendChild(style);
+  const clean = () => {
+    const target = document.querySelector(sel);
+    if (!target) return;
+    // hide everything that is not the block or one of its ancestors
+    let n: Element | null = target;
+    while (n && n.parentElement) {
+      for (const sib of Array.from(n.parentElement.children)) if (sib !== n && sib.tagName !== "SCRIPT" && sib.tagName !== "STYLE") sib.classList.add("ad-hide");
+      n = n.parentElement;
+      if (n === document.body) break;
+    }
+    document.querySelectorAll("body *").forEach((el) => {
+      if (!target.contains(el) && getComputedStyle(el).position === "fixed") el.classList.add("ad-hide");
+    });
+    window.scrollTo(0, 0);
+  };
+  setInterval(clean, 400);
+}
+
 // Meta Pixel with the ID saved in /admin (no tracking inside the admin panel).
-if (!window.location.pathname.startsWith("/admin")) {
+if (!window.location.pathname.startsWith("/admin") && !AD_BLOCK) {
   loadContent().then((c) => bootPixel(c.tracking.metaPixelId, { title: c.product.title, price: c.product.price }));
   // phone links anywhere on the site (sidebar, footer, ...) → Contact event
   document.addEventListener(
