@@ -46,8 +46,8 @@ export const bootPixel = (id: string, product?: { title: string; price: number }
 };
 
 // The product shown on the site (set from /admin content by bootPixel).
-let PRODUCT: { title: string; price: number } = { title: "Cameră 3 obiective zoom 10x", price: 650 };
-const PRODUCT_ID = "luxcam-3lens-10x";
+let PRODUCT: { title: string; price: number } = { title: "Cameră cu 3 capete rotative", price: 650 };
+const PRODUCT_ID = "luxcam-3capete";
 
 // --- persistent anonymous visitor id (external_id) -------------------------
 const VID_KEY = "lx_vid";
