@@ -111,6 +111,9 @@ export const PackageTiles = ({
   </div>
 );
 
+// Photo shown for the single-camera package (3-head camera with floodlights on)
+const OFFER_PHOTO_1 = "/products/cam3-offer-1.webp";
+
 /** Where the chosen package pops in. Re-mounts (re-animates) on every change. */
 export const OfferStage = ({ pkg, unit }: { pkg: Package; unit: number }) => {
   const c = useContent();
@@ -150,15 +153,24 @@ export const OfferStage = ({ pkg, unit }: { pkg: Package; unit: number }) => {
 
       {/* scene: re-keyed so everything pops in again */}
       <div key={pkg.qty} className="relative aspect-[16/11]">
-        <div aria-hidden className="absolute left-1/2 bottom-[9%] -translate-x-1/2 w-[70%] h-[8%] rounded-[50%] bg-cyan-300/25 blur-xl" />
-        {cams.map((p, i) => (
+        {/* 1 camera: full-size photo of the camera filling the whole stage */}
+        {pkg.qty === 1 && (
+          <img
+            src={OFFER_PHOTO_1}
+            alt="1 cameră"
+            className="offer-pop absolute inset-0 h-full w-full object-cover"
+            draggable={false}
+          />
+        )}
+        {pkg.qty > 1 && <div aria-hidden className="absolute left-1/2 bottom-[9%] -translate-x-1/2 w-[70%] h-[8%] rounded-[50%] bg-cyan-300/25 blur-xl" />}
+        {pkg.qty > 1 && cams.map((p, i) => (
           <div
             key={i}
             className="offer-pop absolute"
             style={{
               left: `${50 + p.x}%`,
               bottom: `${p.b}%`,
-              width: `${p.w * 0.78}%`,
+              width: `${p.w * 1.15}%`,
               transform: "translateX(-50%)",
               zIndex: 10 + i,
               animationDelay: reduced ? "0ms" : `${i * 90}ms`,
