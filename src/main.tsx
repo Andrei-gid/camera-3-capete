@@ -91,6 +91,8 @@ if (AD_BLOCK && AD_SEL[AD_BLOCK]) {
   setInterval(clean, 400);
   window.setTimeout(fit, 1200);
   window.setTimeout(fit, 3000);
+  window.setTimeout(fit, 6000);
+  window.setTimeout(fit, 9000);
   window.addEventListener("resize", () => window.setTimeout(fit, 200));
 }
 
