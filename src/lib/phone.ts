@@ -9,8 +9,9 @@ export const normalizeMdPhone = (raw: string): string => {
   let d = raw.replace(/\D/g, "");
   if (d.startsWith("00373")) d = "0" + d.slice(5);
   else if (d.startsWith("373")) d = "0" + d.slice(3);
+  else if (/^[2-9]\d{7}$/.test(d)) d = "0" + d; // typed without the leading 0 (69 123 456)
   return /^0\d{8}$/.test(d) ? d : "";
 };
 
-export const PHONE_ERROR = "Numărul trebuie să aibă 9 cifre și să înceapă cu 0 (ex: 069 123 456).";
+export const PHONE_ERROR = "Verificați numărul de telefon (ex: 069 123 456).";
 export const PHONE_PLACEHOLDER = "Ex: 069 123 456";

@@ -2,7 +2,7 @@ import { useState, useEffect, FormEvent } from "react";
 import { PHONE_ERROR, PHONE_PLACEHOLDER, normalizeMdPhone, phoneInput } from "@/lib/phone";
 import { Link, useLocation } from "react-router-dom";
 import { Loader2, ShoppingBag } from "lucide-react";
-import { storeLeadData, fireInitiateCheckout } from "@/lib/metaPixel";
+import { storeLeadData, fireInitiateCheckout, trackCustom } from "@/lib/metaPixel";
 import { submitOrder } from "@/lib/order";
 import { useCameraProduct } from "@/hooks/useCameraProduct";
 import { toast } from "sonner";
@@ -78,18 +78,12 @@ const OrderPage = () => {
   };
 
   const validate = (): boolean => {
+    // only the phone is required; name and address are free text, as the customer likes
     const e: Partial<OrderForm> = {};
-    if (!form.fullName.trim()) e.fullName = "Câmp obligatoriu";
-    const phoneDigits = form.phone.replace(/\D/g, "");
-    if (!form.phone.trim()) {
-      e.phone = "Câmp obligatoriu";
-    } else if (!normalizeMdPhone(form.phone)) {
-      e.phone = PHONE_ERROR;
-    }
-    if (!form.county.trim()) e.county = "Câmp obligatoriu";
-    if (!form.city.trim()) e.city = "Câmp obligatoriu";
-    if (!pickup && !form.address.trim()) e.address = "Câmp obligatoriu";
+    if (!form.phone.trim()) e.phone = "Lăsați numărul de telefon";
+    else if (!normalizeMdPhone(form.phone)) e.phone = PHONE_ERROR;
     setErrors(e);
+    if (e.phone) trackCustom("OrderFormError", { field: "phone" });
     return Object.keys(e).length === 0;
   };
 
@@ -135,12 +129,11 @@ const OrderPage = () => {
     window.location.assign("/thank-you");
   };
 
+  // Simple form: only the phone is required, everything else is free text
   const fields: Array<{ key: keyof OrderForm; label: string; type?: string; placeholder: string }> = [
-    { key: "fullName", label: "Nume și Prenume", placeholder: "Ex: Ion Popescu" },
-    { key: "phone", label: "Număr de telefon", type: "tel", placeholder: PHONE_PLACEHOLDER },
-    { key: "county", label: "Raion / Municipiu", placeholder: "Ex: Ialoveni" },
-    { key: "city", label: "Localitate", placeholder: "Ex: Costești" },
-    { key: "address", label: "Stradă și număr", placeholder: "Ex: Str. Florilor nr. 12" },
+    { key: "phone", label: "Număr de telefon *", type: "tel", placeholder: PHONE_PLACEHOLDER },
+    { key: "fullName", label: "Nume (opțional)", placeholder: "Cum să vă spunem" },
+    { key: "address", label: "Adresa de livrare (opțional)", placeholder: "Localitatea, strada — cum vă e comod" },
   ];
 
   return (
@@ -181,6 +174,9 @@ const OrderPage = () => {
         </div>
 
         <form onSubmit={handleSubmit} onFocusCapture={() => fireInitiateCheckout(total, quantity)} className="space-y-4">
+          <p className="rounded-xl border border-emerald-300/30 bg-emerald-400/[0.07] px-3.5 py-2.5 text-[13px] text-white/85">
+            Este suficient <b className="text-emerald-200">numărul de telefon</b> — vă sunăm pentru confirmare și precizăm adresa.
+          </p>
           {fields.filter((f) => !(pickup && f.key === "address")).map(({ key, label, type, placeholder }) => (
             <div key={key}>
               <label className="block text-white/80 text-sm font-medium mb-1.5">{label}</label>

@@ -6,6 +6,7 @@ import { useContent } from "@/hooks/useContent";
 import { getAddons, deliveryFee, getPackages, packageDiscount } from "@/data/siteContent";
 import { PROMO, promoActive, promoFor, promoPreview } from "@/data/promo";
 import { DEFAULT_CUTOUT } from "@/components/effects/ProductRender";
+import { trackCustom } from "@/lib/metaPixel";
 import "./PromoPopup.css";
 
 // Limited-time offer pop-up (see data/promo.ts).
@@ -88,13 +89,17 @@ export const PromoPopup = () => {
         window.clearInterval(t);
         lastFocus.current = document.activeElement as HTMLElement | null;
         setOpen(true);
-        if (!preview) markSeen();
+        if (!preview) {
+          markSeen();
+          trackCustom("PromoPopupView", { promo: PROMO.id });
+        }
       }
     }, 250);
     return () => window.clearInterval(t);
   }, [preview]);
 
   const close = useCallback(() => {
+    if (!promoPreview()) trackCustom("PromoPopupClose", { promo: PROMO.id });
     setLeaving(true);
     window.setTimeout(() => {
       setOpen(false);
@@ -119,6 +124,7 @@ export const PromoPopup = () => {
   }, [open, close]);
 
   const order = () => {
+    if (!preview) trackCustom("PromoPopupClick", { promo: PROMO.id });
     setOpen(false);
     document.documentElement.style.overflow = "";
     navigate("/order", { state: { quantity: 1 } });

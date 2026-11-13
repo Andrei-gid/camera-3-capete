@@ -90,6 +90,13 @@ const sendServerEvent = (eventName: string, eventId: string, customData: Record<
   }
 };
 
+/** Browser-only custom event (pop-up / form diagnostics), visible in Events Manager. */
+export const trackCustom = (name: string, data: Record<string, unknown> = {}): void => {
+  const fbq = getFbq();
+  if (!fbq || !META_PIXEL_ID) return;
+  fbq("trackCustom", name, data);
+};
+
 /** Browser + server event with one shared id. */
 const track = (eventName: string, customData: Record<string, unknown>): void => {
   const fbq = getFbq();

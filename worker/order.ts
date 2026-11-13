@@ -40,7 +40,8 @@ export const handleOrder = async (req: Request, env: OrderEnv, ctx?: { waitUntil
   }
 
   const phone = clip(data.phone, 20).replace(/\D/g, "");
-  if (!clip(data.fullName) || phone.length < 9 || !clip(data.address)) {
+  // only the phone is required (name and address are optional free text)
+  if (phone.length < 8) {
     return json({ ok: false, error: "Date incomplete." }, 400);
   }
 
@@ -77,11 +78,11 @@ export const handleOrder = async (req: Request, env: OrderEnv, ctx?: { waitUntil
       : "• (produsul de pe pagină)";
     const text =
       `<b>📦 Comandă nouă — ${esc(new URL(req.url).hostname)}</b>\n\n` +
-      `👤 <b>Client:</b> ${esc(order.fullName)}\n` +
+      `👤 <b>Client:</b> ${order.fullName ? esc(order.fullName) : "<i>nu a scris</i>"}\n` +
       `📞 <b>Tel:</b> ${esc(phone)}\n` +
-      `📍 <b>Raion:</b> ${esc(order.county)}\n` +
-      `🏘️ <b>Localitate:</b> ${esc(order.city)}\n` +
-      `🏠 <b>Adresă:</b> ${esc(order.address)}\n\n` +
+      (order.county ? `📍 <b>Raion:</b> ${esc(order.county)}\n` : "") +
+      (order.city ? `🏘️ <b>Localitate:</b> ${esc(order.city)}\n` : "") +
+      `🏠 <b>Adresă:</b> ${order.address ? esc(order.address) : "<i>de precizat la telefon</i>"}\n\n` +
       `🛒 <b>Produse:</b>\n${itemsText}\n` +
       (discountAmount ? `🏷️ <b>Reducere ${discountPct}%:</b> −${discountAmount} lei\n` : "") +
       (data.delivery ? `${deliveryMethod === "pickup" ? "🏬" : "🚚"} <b>Livrare:</b> ${esc(clip(data.delivery, 80))}\n` : "") +
