@@ -142,8 +142,11 @@ export const PromoPopup = () => {
             <i />
             Ofertă limitată
           </span>
-          <span className="pp-dates">{PROMO.datesLabel}</span>
         </div>
+        <p className="pp-week">
+          Doar această săptămână
+          <span>{PROMO.datesLabel}</span>
+        </p>
 
         {/* product stage */}
         <div className="pp-stage" aria-hidden>
@@ -208,22 +211,7 @@ export const PromoPopup = () => {
           )}
         </div>
 
-        <div className="pp-timer" aria-label="Timp rămas până la sfârșitul ofertei">
-          <small>Oferta expiră în</small>
-          <div className="pp-digits">
-            {[
-              { v: cd.d, l: "zile" },
-              { v: cd.h, l: "ore" },
-              { v: cd.m, l: "min" },
-              { v: cd.s, l: "sec" },
-            ].map((x, i) => (
-              <span key={x.l} className="pp-dg">
-                <b key={i === 3 ? x.v : undefined}>{pad(x.v)}</b>
-                <small>{x.l}</small>
-              </span>
-            ))}
-          </div>
-        </div>
+        <WeekTimer cd={cd} />
 
         <button ref={ctaRef} type="button" className="pp-cta" onClick={order}>
           <span>Comandă acum</span>
@@ -249,6 +237,58 @@ export const PromoPopup = () => {
   );
 };
 
+/** The promo week as one cell per day (today highlighted) + hh:mm:ss left. */
+const WeekTimer = ({ cd }: { cd: ReturnType<typeof useCountdown> }) => {
+  const days = promoDays();
+  const today = days.findIndex((d) => d.today);
+  const left = days.length - Math.max(0, today);
+  return (
+    <div className="pp-timer" aria-label="Timp rămas până la sfârșitul ofertei">
+      <div className="pp-timer-top">
+        <small>{left > 1 ? `Mai sunt ${left} zile din ofertă` : "Ultima zi a ofertei!"}</small>
+        <span className="pp-clock">
+          {cd.d > 0 && (
+            <>
+              <b>{cd.d}</b>
+              <i>z</i>
+            </>
+          )}
+          <b>{pad(cd.h)}</b>
+          <i>:</i>
+          <b>{pad(cd.m)}</b>
+          <i>:</i>
+          <b key={cd.s} className="pp-sec">
+            {pad(cd.s)}
+          </b>
+        </span>
+      </div>
+      <ol className="pp-days">
+        {days.map((d, i) => (
+          <li key={d.n} className={i < today ? "pp-past" : d.today ? "pp-today" : ""}>
+            <small>{d.w}</small>
+            <b>{d.n}</b>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+};
+
+/** Calendar days of the promo in Chișinău time: weekday + day number, today flagged. */
+const promoDays = () => {
+  const fmt = (t: number, o: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat("ro-RO", { timeZone: "Europe/Chisinau", ...o }).format(t);
+  const todayKey = fmt(Date.now(), { year: "numeric", month: "2-digit", day: "2-digit" });
+  const out: { n: string; w: string; today: boolean }[] = [];
+  for (let t = PROMO.start + 12 * 3600e3; t < PROMO.end; t += 24 * 3600e3) {
+    out.push({
+      n: fmt(t, { day: "numeric" }),
+      w: fmt(t, { weekday: "short" }).replace(".", "").slice(0, 3),
+      today: fmt(t, { year: "numeric", month: "2-digit", day: "2-digit" }) === todayKey,
+    });
+  }
+  return out;
+};
+
 /** One-line promo strip for the order forms and the hero (only for 1 camera while the promo runs). */
 export const PromoStrip = ({ qty, className = "" }: { qty: number; className?: string }) => {
   const n = usePromoNumbers();
@@ -262,7 +302,7 @@ export const PromoStrip = ({ qty, className = "" }: { qty: number; className?: s
         <Gift />
       </span>
       <span className="pp-strip-t">
-        <b>Promoție {PROMO.datesLabel}</b>
+        <b>Promoția săptămânii · {PROMO.datesLabel}</b>
         <small>
           {parts.join(" + ")} · mai sunt {cd.d > 0 ? `${cd.d} z ` : ""}
           {pad(cd.h)}:{pad(cd.m)}:{pad(cd.s)}
