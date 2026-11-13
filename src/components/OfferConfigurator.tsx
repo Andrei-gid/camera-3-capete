@@ -6,6 +6,7 @@ import { DEFAULT_CUTOUT } from "@/components/effects/ProductRender";
 import { useGift, giftItem } from "@/components/GiftPromo";
 import { defaultPackage, getPackages, packageDiscount, type Package } from "@/data/siteContent";
 import type { OrderItem } from "@/lib/order";
+import { PROMO, promoFor } from "@/data/promo";
 
 // Interactive "how many cameras?" offer: quantity tiles + a stage where the
 // chosen package pops in (N cameras + N microSD cards, price counter, saving).
@@ -249,7 +250,14 @@ export const OfferStage = ({ pkg, unit }: { pkg: Package; unit: number }) => {
             {off > 0 && <p className="text-sm font-bold text-emerald-300">Economisiți {full - pkg.price} lei</p>}
           </div>
         </div>
-        {!c.delivery.free && c.delivery.note && (
+        {promoFor(pkg.qty) ? (
+          <p className="mt-2 flex items-center gap-2 rounded-xl bg-emerald-400/10 border border-emerald-300/35 px-2.5 py-1.5 text-[12px] text-white">
+            <Gift className="w-4 h-4 shrink-0 text-emerald-300" />
+            <span>
+              Promoție {PROMO.datesLabel}: <b className="text-emerald-200">card microSD 64 GB cadou</b> + <b className="text-emerald-200">livrare gratuită</b>
+            </span>
+          </p>
+        ) : !c.delivery.free && c.delivery.note && (
           <p className="mt-2 text-[13px] leading-snug text-white/65">{c.delivery.note}</p>
         )}
         {gift && (

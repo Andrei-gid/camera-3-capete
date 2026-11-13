@@ -9,6 +9,8 @@ import BigOrderButton from "@/components/BigOrderButton";
 import { useContent } from "@/hooks/useContent";
 import { GiftPhotoBadge } from "@/components/GiftPromo";
 import { OfferStage, PackageTiles, usePackages } from "@/components/OfferConfigurator";
+import { PromoStrip } from "@/components/PromoPopup";
+import { promoFor } from "@/data/promo";
 
 export const LandingHeroConfigurator = () => {
   const navigate = useNavigate();
@@ -182,7 +184,7 @@ export const LandingHeroConfigurator = () => {
             {/* Trust chips */}
             <ul className="mt-4 grid grid-cols-3 gap-2 text-center">
               {[
-                { icon: <Truck className="w-4 h-4 text-amber-400" />, top: "Livrare", val: content.delivery.free ? "Gratuită" : content.delivery.short || "Prin curier" },
+                { icon: <Truck className="w-4 h-4 text-amber-400" />, top: "Livrare", val: content.delivery.free || promoFor(pkg.qty) ? "Gratuită" : content.delivery.short || "Prin curier" },
                 { icon: <ShieldCheck className="w-4 h-4 text-amber-400" />, top: "Verificare colet", val: "Gratuită" },
                 { icon: <Wallet className="w-4 h-4 text-amber-400" />, top: "Plată", val: "La livrare" },
               ].map((t) => (
@@ -199,7 +201,9 @@ export const LandingHeroConfigurator = () => {
               <BigOrderButton price={pkg.price} sub="Plată la livrare · verificare colet" onClick={handleOrder} />
             </div>
 
-            {!content.delivery.free && content.delivery.note && (
+            {promoFor(pkg.qty) ? (
+              <PromoStrip qty={pkg.qty} className="mt-3" />
+            ) : !content.delivery.free && content.delivery.note && (
               <p className="mt-3 text-center text-white/70 text-sm leading-snug">{content.delivery.note}</p>
             )}
 

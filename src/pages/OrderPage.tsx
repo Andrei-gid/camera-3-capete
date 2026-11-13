@@ -8,6 +8,7 @@ import { useCameraProduct } from "@/hooks/useCameraProduct";
 import { toast } from "sonner";
 import { GiftBundle, GiftSummaryRow, useGift, giftItem } from "@/components/GiftPromo";
 import { usePackages } from "@/components/OfferConfigurator";
+import { PromoStrip } from "@/components/PromoPopup";
 import { AddonsPicker, DeliveryPicker, OrderTotals, orderItems } from "@/components/AddonsPicker";
 import { useContent } from "@/hooks/useContent";
 import { deliveryLabel, orderSummary, type DeliveryMethod } from "@/data/siteContent";
@@ -104,7 +105,7 @@ const OrderPage = () => {
       items: [...orderItems(product.title, pkg, sum), ...(gift ? [giftItem(gift.title, quantity)] : [])],
       total,
       discount: sum.discount ? { percent: sum.discountPct, amount: sum.discount } : undefined,
-      delivery: deliveryLabel(content, method),
+      delivery: deliveryLabel(content, method, pkg.qty),
       deliveryMethod: content.delivery.free ? undefined : method,
       deliveryFee: sum.delivery,
       source: "Pagina de comandă",
@@ -171,8 +172,9 @@ const OrderPage = () => {
           </div>
         )}
 
+        <PromoStrip qty={quantity} className="mb-5" />
         <AddonsPicker qty={quantity} chosen={chosen} onChange={setChosen} />
-        <DeliveryPicker value={method} onChange={setMethod} />
+        <DeliveryPicker value={method} onChange={setMethod} qty={pkg.qty} />
 
         <div className="mb-6 rounded-2xl border border-white/12 bg-white/[0.04] p-4">
           <OrderTotals pkg={pkg} s={sum} />

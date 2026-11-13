@@ -11,6 +11,7 @@ import { PackageTiles, usePackages } from "@/components/OfferConfigurator";
 import { AddonsPicker, DeliveryPicker, OrderTotals, orderItems } from "@/components/AddonsPicker";
 import { deliveryLabel, orderSummary, type DeliveryMethod } from "@/data/siteContent";
 import BigOrderButton from "@/components/BigOrderButton";
+import { PromoStrip } from "@/components/PromoPopup";
 
 
 
@@ -80,7 +81,7 @@ export const BottomCheckoutWidget = () => {
       items: [...orderItems(product.title, pkg, sum), ...(gift ? [giftItem(gift.title, pkg.qty)] : [])],
       total: PRICE,
       discount: sum.discount ? { percent: sum.discountPct, amount: sum.discount } : undefined,
-      delivery: deliveryLabel(content, method),
+      delivery: deliveryLabel(content, method, pkg.qty),
       deliveryMethod: delivery.free ? undefined : method,
       deliveryFee: sum.delivery,
       source: "Formular jos pagină",
@@ -145,8 +146,9 @@ export const BottomCheckoutWidget = () => {
             </div>
           )}
 
+          <PromoStrip qty={pkg.qty} className="mb-5" />
           <AddonsPicker qty={pkg.qty} chosen={chosen} onChange={setChosen} />
-          <DeliveryPicker value={method} onChange={setMethod} />
+          <DeliveryPicker value={method} onChange={setMethod} qty={pkg.qty} />
 
           {/* High-Visibility Pricing & Benefits Header */}
           <div className="rounded-2xl border border-white/12 bg-white/[0.04] backdrop-blur-xl p-4 md:p-5 mb-6 space-y-3">

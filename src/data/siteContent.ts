@@ -1,3 +1,4 @@
+import { PROMO, promoFor } from "./promo";
 // Everything the admin panel can change lives in this one structure.
 // DEFAULT_CONTENT is what the site shows until something is saved in /admin;
 // a saved section always replaces the default section of the same name.
@@ -592,7 +593,11 @@ export const getAddons = (c: SiteContent): Addon[] =>
 
 export interface OrderSummary {
   cameras: number; // full price of the cameras (unit × qty)
-  addons: { addon: Addon; quantity: number; amount: number }[]; // chosen accessories, full price
+  // chosen accessories at full price; `free` = given by the promo (amount 0)
+  addons: { addon: Addon; quantity: number; amount: number; free?: boolean }[];
+  promo: boolean; // the limited-time promo applies to this order (see data/promo.ts)
+  promoSaved: number; // lei the promo saves (free accessory + free courier)
+  deliveryFull: number; // courier fee before the promo (equals `delivery` when there is no promo)
   subtotal: number; // cameras + accessories, before discount
   discountPct: number;
   discount: number; // lei taken off — cameras only; accessories and delivery are always full price
@@ -608,14 +613,17 @@ export const deliveryFee = (c: SiteContent, m: DeliveryMethod): number =>
   c.delivery.free || m === "pickup" ? 0 : Math.max(0, Math.round(Number(c.delivery.courierPrice) || 0));
 
 /** Delivery line for Telegram / admin. */
-export const deliveryLabel = (c: SiteContent, m: DeliveryMethod): string => {
+export const deliveryLabel = (c: SiteContent, m: DeliveryMethod, qty = 0): string => {
   if (c.delivery.free) return "gratuită";
+  if (m === "courier" && PROMO.freeDelivery && promoFor(qty))
+    return `${c.delivery.paidText || "Curier"} — GRATUIT (promoție ${PROMO.datesLabel})`;
   if (m === "pickup") return c.delivery.pickupText || "Ridicare din depozit";
   const fee = deliveryFee(c, m);
   return `${c.delivery.paidText || "Curier"}${fee ? ` (+${fee} lei)` : ""}`;
 };
 
-/** Price of an order: package + chosen accessories (one per camera). The package discount applies to the cameras only. */
+/** Price of an order: package + chosen accessories (one per camera). The package discount applies to the cameras only.
+ *  While the promo runs, an order of PROMO.qty cameras gets the promo accessory for free and free courier delivery. */
 export const orderSummary = (
   c: SiteContent,
   p: Package,
@@ -624,18 +632,38 @@ export const orderSummary = (
 ): OrderSummary => {
   const unit = c.product.price;
   const pct = orderDiscountPct(p, unit);
+  const promo = promoFor(p.qty);
   // packages saved with a fixed price keep it exactly
   const cameras = typeof p.discount === "number" ? unit * p.qty : p.price;
   const fullCameras = typeof p.discount === "number" ? cameras : unit * p.qty;
-  const addons = getAddons(c)
-    .filter((a) => chosen.includes(a.id))
-    .map((a) => ({ addon: a, quantity: p.qty, amount: a.price * p.qty }));
+  const list = getAddons(c);
+  const promoAddon = promo ? list.find((a) => a.id === PROMO.giftAddonId) : undefined;
+  const addons = list
+    .filter((a) => a === promoAddon || chosen.includes(a.id))
+    .map((a) =>
+      a === promoAddon
+        ? { addon: a, quantity: p.qty, amount: 0, free: true }
+        : { addon: a, quantity: p.qty, amount: a.price * p.qty },
+    );
   const addonsSum = addons.reduce((s, a) => s + a.amount, 0);
   const subtotal = fullCameras + addonsSum;
   // discount on the cameras only; accessories (and the delivery added below) are charged in full
   const goods = (typeof p.discount === "number" ? discounted(cameras, pct) : p.price) + addonsSum;
-  const delivery = deliveryFee(c, method);
-  return { cameras: fullCameras, addons, subtotal, discountPct: pct, discount: subtotal - goods, delivery, total: goods + delivery };
+  const normalFee = deliveryFee(c, method);
+  const delivery = promo && PROMO.freeDelivery ? 0 : normalFee;
+  const promoSaved = promo ? (promoAddon ? promoAddon.price * p.qty : 0) + (normalFee - delivery) : 0;
+  return {
+    cameras: fullCameras,
+    addons,
+    promo,
+    promoSaved,
+    deliveryFull: normalFee,
+    subtotal,
+    discountPct: pct,
+    discount: subtotal - goods,
+    delivery,
+    total: goods + delivery,
+  };
 };
 
 /** Package selected by default: the featured one, else the first. */

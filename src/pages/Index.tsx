@@ -20,6 +20,7 @@ import DeliveryTrustSection from "@/components/DeliveryTrustSection";
 import LuxuryFooter from "@/components/LuxuryFooter";
 import BottomCheckoutWidget from "@/components/BottomCheckoutWidget";
 import ProductAssistantChat from "@/components/ProductAssistantChat";
+import PromoPopup from "@/components/PromoPopup";
 import FloatingMessengers from "@/components/FloatingMessengers";
 import SetupSteps from "@/components/effects/SetupSteps";
 import DayNightShowcase from "@/components/effects/DayNightShowcase";
@@ -143,6 +144,7 @@ const Index = () => {
           <LuxuryFooter />
           <FloatingMessengers />
           <ProductAssistantChat />
+          <PromoPopup />
         </div>
       </main>
     </div>

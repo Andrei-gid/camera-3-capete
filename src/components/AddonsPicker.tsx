@@ -1,9 +1,10 @@
 import { useState, type ReactNode } from "react";
-import { Package as PackageIcon, Truck, BadgePercent, ZoomIn, Warehouse } from "lucide-react";
+import { Package as PackageIcon, Truck, BadgePercent, ZoomIn, Warehouse, Gift } from "lucide-react";
 import { useContent } from "@/hooks/useContent";
 import { deliveryFee, getAddons, type Addon, type DeliveryMethod, type OrderSummary, type Package } from "@/data/siteContent";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import type { OrderItem } from "@/lib/order";
+import { PROMO, promoFor } from "@/data/promo";
 
 // Optional accessories in the order forms: one row per accessory with a calm
 // "Nu / Da" switch (default Nu). Accepted accessories are added once per camera
@@ -14,7 +15,11 @@ export const useAddons = () => getAddons(useContent());
 /** Order lines for Telegram / admin: cameras + chosen accessories at full price. */
 export const orderItems = (title: string, p: Package, s: OrderSummary): OrderItem[] => [
   { name: p.qty > 1 ? `${title} — ${p.label}` : title, quantity: p.qty, price: Math.round((s.cameras / p.qty) * 100) / 100 },
-  ...s.addons.map((a) => ({ name: a.addon.title, quantity: a.quantity, price: a.addon.price })),
+  ...s.addons.map((a) =>
+    a.free
+      ? { name: `🎁 CADOU (promoție ${PROMO.datesLabel}): ${a.addon.title}`, quantity: a.quantity, price: 0 }
+      : { name: a.addon.title, quantity: a.quantity, price: a.addon.price },
+  ),
 ];
 
 export const AddonsPicker = ({
@@ -38,7 +43,8 @@ export const AddonsPicker = ({
       {c.addons.text && <p className="mt-0.5 text-[13px] md:text-sm text-white/55">{c.addons.text}</p>}
       <ul className="mt-3 space-y-2.5">
         {list.map((a) => {
-          const on = chosen.includes(a.id);
+          const gifted = promoFor(qty) && a.id === PROMO.giftAddonId;
+          const on = gifted || chosen.includes(a.id);
           return (
             <li
               key={a.id}
@@ -66,12 +72,25 @@ export const AddonsPicker = ({
               <span className="min-w-0 flex-1">
                 <span className="block text-[13px] md:text-sm font-semibold text-white leading-tight">{a.title}</span>
                 {a.text && <span className="block text-[13px] text-white/55 leading-snug">{a.text}</span>}
-                <span className="mt-0.5 flex items-baseline gap-1.5">
-                  {a.oldPrice ? <s className="text-[13px] text-white/40">{a.oldPrice} lei</s> : null}
-                  <span className="text-[13px] font-bold text-amber-300">+{a.price} lei</span>
-                  {qty > 1 && <span className="text-[13px] text-white/50">× {qty}</span>}
-                </span>
+                {gifted ? (
+                  <span className="mt-0.5 flex items-baseline gap-1.5">
+                    <s className="text-[13px] text-white/40">{a.price} lei</s>
+                    <span className="text-[13px] font-extrabold text-emerald-300">0 lei · cadou</span>
+                  </span>
+                ) : (
+                  <span className="mt-0.5 flex items-baseline gap-1.5">
+                    {a.oldPrice ? <s className="text-[13px] text-white/40">{a.oldPrice} lei</s> : null}
+                    <span className="text-[13px] font-bold text-amber-300">+{a.price} lei</span>
+                    {qty > 1 && <span className="text-[13px] text-white/50">× {qty}</span>}
+                  </span>
+                )}
               </span>
+              {gifted ? (
+                <span className="shrink-0 inline-flex items-center gap-1 rounded-full bg-emerald-400 px-2.5 py-1.5 text-[12px] font-extrabold uppercase tracking-wide text-slate-900">
+                  <Gift className="w-3.5 h-3.5" />
+                  Inclus
+                </span>
+              ) : (
               <span role="radiogroup" aria-label={a.title} className="shrink-0 inline-flex rounded-full border border-white/15 bg-black/30 p-0.5">
                 {[
                   { v: false, t: "Nu" },
@@ -91,6 +110,7 @@ export const AddonsPicker = ({
                   </button>
                 ))}
               </span>
+              )}
             </li>
           );
         })}
@@ -128,11 +148,19 @@ export const OrderTotals = ({ pkg, s }: { pkg: Package; s: OrderSummary }) => {
       </div>
       {s.addons.map((a) => (
         <div key={a.addon.id} className={row}>
-          <span className="text-white/75 min-w-0 truncate">
+          <span className={`min-w-0 truncate ${a.free ? "inline-flex items-center gap-1.5 text-emerald-300" : "text-white/75"}`}>
+            {a.free && <Gift className="w-4 h-4 shrink-0" />}
             {a.addon.title}
             {a.quantity > 1 ? ` × ${a.quantity}` : ""}
           </span>
-          <span className="text-white font-semibold tabular-nums shrink-0">{a.amount} lei</span>
+          {a.free ? (
+            <span className="shrink-0 flex items-baseline gap-2 tabular-nums">
+              <s className="text-white/40 text-sm">{a.addon.price * a.quantity} lei</s>
+              <span className="text-emerald-400 font-bold">CADOU</span>
+            </span>
+          ) : (
+            <span className="text-white font-semibold tabular-nums shrink-0">{a.amount} lei</span>
+          )}
         </div>
       ))}
       {s.discount > 0 && (
@@ -149,15 +177,22 @@ export const OrderTotals = ({ pkg, s }: { pkg: Package; s: OrderSummary }) => {
           <Truck className="w-4 h-4 text-white/50" />
           Livrare
         </span>
-        <span className={`text-right tabular-nums ${delivery.free ? "text-emerald-400 font-bold" : "text-white font-semibold"}`}>
-          {delivery.free ? "GRATUIT" : s.delivery > 0 ? `${s.delivery} lei` : "0 lei"}
-        </span>
+        {s.promo && s.deliveryFull > s.delivery ? (
+          <span className="flex items-baseline gap-2 tabular-nums">
+            <s className="text-white/40 text-sm">{s.deliveryFull} lei</s>
+            <span className="text-emerald-400 font-bold">GRATUIT</span>
+          </span>
+        ) : (
+          <span className={`text-right tabular-nums ${delivery.free ? "text-emerald-400 font-bold" : "text-white font-semibold"}`}>
+            {delivery.free ? "GRATUIT" : s.delivery > 0 ? `${s.delivery} lei` : "0 lei"}
+          </span>
+        )}
       </div>
       <div className="h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
       <div className="flex items-end justify-between gap-3">
         <span className="text-white/75 text-sm md:text-base uppercase tracking-[0.14em]">Total</span>
         <span className="flex items-baseline gap-2">
-          {s.discount > 0 && <s className="text-white/40 text-sm tabular-nums">{s.subtotal + s.delivery} lei</s>}
+          {(s.discount > 0 || s.promoSaved > 0) && <s className="text-white/40 text-sm tabular-nums">{s.total + s.discount + s.promoSaved} lei</s>}
           <span className="font-orbitron text-amber-300 font-extrabold text-2xl md:text-3xl leading-none tabular-nums drop-shadow-[0_0_22px_rgba(255,180,50,0.55)]">
             {s.total} lei
           </span>
@@ -168,16 +203,17 @@ export const OrderTotals = ({ pkg, s }: { pkg: Package; s: OrderSummary }) => {
 };
 
 /** Courier to the door (flat fee for the whole order) or free pickup in Chișinău. Hidden when delivery is free. */
-export const DeliveryPicker = ({ value, onChange }: { value: DeliveryMethod; onChange: (m: DeliveryMethod) => void }) => {
+export const DeliveryPicker = ({ value, onChange, qty = 0 }: { value: DeliveryMethod; onChange: (m: DeliveryMethod) => void; qty?: number }) => {
   const c = useContent();
   if (c.delivery.free) return null;
-  const fee = deliveryFee(c, "courier");
+  const promo = PROMO.freeDelivery && promoFor(qty);
+  const fee = promo ? 0 : deliveryFee(c, "courier");
   const options: { id: DeliveryMethod; icon: ReactNode; title: string; hint: string; price: string }[] = [
     {
       id: "courier",
       icon: <Truck className="w-5 h-5" />,
       title: c.delivery.paidText || "Curier expres la domiciliu",
-      hint: "Un singur preț pentru întreaga comandă",
+      hint: promo ? `Gratuit — promoție ${PROMO.datesLabel}` : "Un singur preț pentru întreaga comandă",
       price: fee ? `+${fee} lei` : "0 lei",
     },
     {
