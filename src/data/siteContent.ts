@@ -623,7 +623,7 @@ export const deliveryLabel = (c: SiteContent, m: DeliveryMethod, qty = 0): strin
 };
 
 /** Price of an order: package + chosen accessories (one per camera). The package discount applies to the cameras only.
- *  While the promo runs, an order of PROMO.qty cameras gets the promo accessory for free and free courier delivery. */
+ *  While the promo runs, an order of PROMO.minQty+ cameras gets the promo accessory for free and free courier delivery. */
 export const orderSummary = (
   c: SiteContent,
   p: Package,

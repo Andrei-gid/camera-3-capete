@@ -3,33 +3,32 @@ import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight, Gift, ShieldCheck, Truck, Wallet, X } from "lucide-react";
 import { useContent } from "@/hooks/useContent";
-import { getAddons, deliveryFee } from "@/data/siteContent";
+import { getAddons, deliveryFee, getPackages, packageDiscount } from "@/data/siteContent";
 import { PROMO, promoActive, promoFor, promoPreview } from "@/data/promo";
 import { DEFAULT_CUTOUT } from "@/components/effects/ProductRender";
 import "./PromoPopup.css";
 
 // Limited-time offer pop-up (see data/promo.ts).
-// Shown once per day per browser, after the visitor has spent PROMO.popupDelayMs
+// Shown on every visit (once per visit), after the visitor has spent PROMO.popupDelayMs
 // on the page with the tab visible, and never while they are typing in a form.
-// The button opens the checkout page with 1 camera selected; the promo is then
-// applied there automatically (free microSD + free courier).
+// The button opens the checkout page with 1 camera selected; the promo is applied
+// there automatically (free microSD per camera + free courier), for any quantity.
 
+// Once per visit: a new tab / new visit shows it again; moving between pages of the same visit does not.
 const SEEN_KEY = `luxcam_promo_seen_${PROMO.id}`;
-const ONE_DAY = 24 * 60 * 60 * 1000;
 
-const seenRecently = () => {
+const seenThisVisit = () => {
   try {
-    const t = Number(localStorage.getItem(SEEN_KEY) || 0);
-    return Date.now() - t < ONE_DAY;
+    return sessionStorage.getItem(SEEN_KEY) === "1";
   } catch {
     return false;
   }
 };
 const markSeen = () => {
   try {
-    localStorage.setItem(SEEN_KEY, String(Date.now()));
+    sessionStorage.setItem(SEEN_KEY, "1");
   } catch {
-    /* private mode: the pop-up may show again, that's fine */
+    /* storage blocked: it may show again on the next page of the same visit */
   }
 };
 
@@ -77,7 +76,7 @@ export const PromoPopup = () => {
   useEffect(() => {
     if (!promoActive()) return;
     if (new URLSearchParams(window.location.search).has("ad")) return; // ad-recording mode
-    if (!preview && seenRecently()) return;
+    if (!preview && seenThisVisit()) return;
     const need = preview ? 1500 : PROMO.popupDelayMs;
     let spent = 0;
     let last = performance.now();
@@ -122,7 +121,7 @@ export const PromoPopup = () => {
   const order = () => {
     setOpen(false);
     document.documentElement.style.overflow = "";
-    navigate("/order", { state: { quantity: PROMO.qty } });
+    navigate("/order", { state: { quantity: 1 } });
     window.scrollTo(0, 0);
   };
 
@@ -194,6 +193,17 @@ export const PromoPopup = () => {
             </li>
           )}
         </ul>
+
+        {(() => {
+          const multi = getPackages(c).filter((p) => p.qty > 1);
+          const offs = multi.map((p) => packageDiscount(p, c.product.price)).filter((x) => x > 0);
+          return multi.length ? (
+            <p className="pp-note">
+              Cadourile sunt valabile și la {multi.map((p) => p.qty).join("–")} camere
+              {offs.length ? <> — plus reducere <b>{offs.map((x) => `−${x}%`).join(" / ")}</b></> : null}
+            </p>
+          ) : null;
+        })()}
 
         <div className="pp-price">
           <div>
@@ -294,7 +304,7 @@ export const PromoStrip = ({ qty, className = "" }: { qty: number; className?: s
   const n = usePromoNumbers();
   const cd = useCountdown(PROMO.end);
   if (!promoFor(qty) || cd.left <= 0) return null;
-  const parts = [n.card ? `${n.card.title} cadou` : "", n.courier > 0 ? "livrare gratuită" : ""].filter(Boolean);
+  const parts = [n.card ? `${qty > 1 ? `${qty}× ` : ""}${n.card.title} cadou` : "", n.courier > 0 ? "livrare gratuită" : ""].filter(Boolean);
   if (!parts.length) return null;
   return (
     <div className={`pp-strip ${className}`}>

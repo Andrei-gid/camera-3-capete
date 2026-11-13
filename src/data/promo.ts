@@ -1,7 +1,7 @@
-// Limited-time promo for ONE camera: free microSD card + free courier delivery.
+// Limited-time promo: free microSD card (one per camera) + free courier delivery, for any quantity.
 // The price stays the same (800 lei). The promo is shown in a pop-up after the
 // visitor has spent some time on the page, and is applied in every order form
-// whenever 1 camera is ordered while the promo runs.
+// to every order while the promo runs.
 //
 // To run a new promo: change the dates (Chișinău time) and, if needed, the texts.
 
@@ -9,10 +9,10 @@ export const PROMO = {
   id: "2026-11-13_20", // change for a new promo so returning visitors see the pop-up again
   start: new Date("2026-11-13T00:00:00+02:00").getTime(),
   end: new Date("2026-11-21T00:00:00+02:00").getTime(), // runs through 20 November, 23:59
-  qty: 1, // the promo is for orders of exactly this many cameras
+  minQty: 1, // the promo applies to orders of at least this many cameras (the 2/3-camera discounts stay on top)
   giftAddonId: "microsd", // accessory given for free (must exist in content.addons)
   freeDelivery: true, // courier to the door at 0 lei
-  popupDelayMs: 25_000, // time the visitor must spend on the page (tab visible)
+  popupDelayMs: 25_000, // time the visitor must spend on the page (tab visible); shown on every visit
   datesLabel: "13 – 20 noiembrie",
 };
 
@@ -23,7 +23,7 @@ export const promoActive = (now = Date.now()): boolean => {
 };
 
 /** True when an order of `qty` cameras gets the promo right now. */
-export const promoFor = (qty: number, now = Date.now()) => promoActive(now) && qty === PROMO.qty;
+export const promoFor = (qty: number, now = Date.now()) => promoActive(now) && qty >= PROMO.minQty;
 
 export const promoPreview = (): boolean => {
   try {

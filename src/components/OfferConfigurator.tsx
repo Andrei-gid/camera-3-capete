@@ -254,7 +254,7 @@ export const OfferStage = ({ pkg, unit }: { pkg: Package; unit: number }) => {
           <p className="mt-2 flex items-center gap-2 rounded-xl bg-emerald-400/10 border border-emerald-300/35 px-2.5 py-1.5 text-[12px] text-white">
             <Gift className="w-4 h-4 shrink-0 text-emerald-300" />
             <span>
-              Promoție {PROMO.datesLabel}: <b className="text-emerald-200">card microSD 64 GB cadou</b> + <b className="text-emerald-200">livrare gratuită</b>
+              Promoție {PROMO.datesLabel}: <b className="text-emerald-200">{pkg.qty > 1 ? `${pkg.qty}× ` : ""}card microSD 64 GB cadou</b> + <b className="text-emerald-200">livrare gratuită</b>
             </span>
           </p>
         ) : !c.delivery.free && c.delivery.note && (
